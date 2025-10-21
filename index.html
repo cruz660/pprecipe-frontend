@@ -1,290 +1,1297 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pawfect Recipe Generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pp pawfact 狗狗個人化鮮食顧問</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+        :root {
+            --primary-color: #00695C;
+            --secondary-color: #00897B;
+            --accent-color: #FFC107;
+            --bg-color: #F5F7FA;
+            --text-color: #333;
+            --light-gray: #E0E0E0;
+            --white: #FFFFFF;
+            --protein-color: #3498DB;
+            --fat-color: #F1C40F;
+            --carb-color: #E67E22;
+            --danger-color: #D32F2F;
+            --success-color: #2E7D32;
+        }
 
-  <style>
-    /* Your existing CSS (keep all) */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 30px;
-      text-align: center;
-    }
-    h1 { margin: 0; font-size: 2.5rem; }
-    .subtitle { font-size: 1.2rem; opacity: 0.9; margin-top: 10px; }
-    .form-section {
-      padding: 30px;
-      background: #f8f9fa;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-    label {
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #555;
-    }
-    input, select {
-      padding: 12px;
-      border: 2px solid #e1e5e9;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.3s;
-    }
-    input:focus, select:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    .btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      padding: 14px 32px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.3s;
-      align-self: flex-start;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-    }
-    .result-section {
-      padding: 30px;
-      background: white;
-      display: none;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #888;
-      font-size: 0.9rem;
-    }
-    /* Login Modal */
-    #login-modal {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center;
-      z-index: 1000;
-    }
-  </style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--white);
+            padding: 20px 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        header p {
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .profile-manager {
+            background-color: #E8F5E9;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .profile-manager .profile-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile-manager label {
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .profile-manager select, .profile-manager button {
+            padding: 8px 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .profile-manager button.save-btn {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #333;
+            font-weight: 500;
+        }
+        #profile-message {
+            font-size: 13px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: var(--white);
+        }
+        
+        .form-group select:disabled {
+            background-color: #f2f2f2;
+            cursor: not-allowed;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.2);
+        }
+
+        .option-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            padding-top: 5px;
+        }
+
+        .option-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .option-group input[type="radio"],
+        .allergen-group input[type="checkbox"] {
+            margin-right: 8px;
+            width: auto;
+        }
+        
+        .allergen-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border: 1px solid var(--light-gray);
+        }
+        .allergen-group label {
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        #recipe-warning {
+            color: var(--danger-color);
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 8px;
+            height: 1em; /* Reserve space to prevent layout shift */
+        }
+
+        .calculate-btn {
+            grid-column: 1 / -1;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 105, 92, 0.3);
+        }
+
+        #result-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px dashed var(--light-gray);
+            display: none; /* Initially hidden */
+        }
+        
+        .result-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .print-btn {
+            padding: 8px 16px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .print-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        .recipe-card {
+            border: 1px solid var(--primary-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .recipe-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+            padding: 0;
+        }
+        #recipe-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+        .recipe-header-content {
+            padding: 20px;
+        }
+        .recipe-header h2 { margin: 0; font-size: 22px; font-weight: 700; }
+        #recipe-target-issue { display: inline-block; background-color: rgba(255, 255, 255, 0.15); border-radius: 15px; padding: 6px 15px; font-size: 15px; margin-top: 12px; border: 1px solid rgba(255, 255, 255, 0.3); }
+        #recipe-target-issue svg { vertical-align: middle; margin-right: 5px; margin-bottom: 2px; }
+        #recipe-subtitle { margin: 10px 0 0; opacity: 0.9; font-size: 14px; }
+        #recipe-special-note { background-color: var(--danger-color); color: white; padding: 10px 15px; margin: 15px auto 0; border-radius: 6px; font-size: 14px; font-weight: 500; max-width: 90%; }
+
+        .recipe-body { padding: 25px; }
+        .result-subsection { margin-bottom: 30px; }
+        .result-subsection h3 { display: flex; align-items: center; font-size: 18px; color: var(--primary-color); margin-top: 0; margin-bottom: 15px; }
+        .result-subsection h3 svg { margin-right: 10px; flex-shrink: 0; }
+
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; text-align: center; }
+        .summary-item { background-color: var(--bg-color); padding: 15px; border-radius: 8px; }
+        .summary-item .label { font-size: 14px; color: #555; }
+        .summary-item .value { font-size: 20px; font-weight: 700; color: var(--primary-color); }
+        
+        .pie-chart-container { display: flex; gap: 20px; align-items: center; }
+        .pie-chart { width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(var(--protein-color) 0% 40%, var(--fat-color) 40% 75%, var(--carb-color) 75% 100%); flex-shrink: 0; }
+        .pie-legend { display: flex; flex-direction: column; gap: 10px; }
+        .legend-item { display: flex; align-items: center; font-size: 14px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; margin-right: 10px; }
+        .legend-label { font-weight: 500; }
+        .legend-value { margin-left: auto; padding-left: 15px; text-align: right; }
+        .legend-grams { font-size: 12px; color: #777; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 15px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; vertical-align: top; }
+        th { background-color: #E8F5E9; font-weight: 500; }
+        
+        .supplements-table td { font-size: 14px; }
+        .supplements-table .warning { color: #E65100; font-weight: bold; display: block; margin-top: 5px; }
+        
+        .instructions h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .instructions ol { list-style-type: none; padding-left: 0; }
+        .instructions li { display: flex; align-items: flex-start; margin-bottom: 15px; padding: 10px; background-color: #fafafa; border-radius: 5px; border-left: 3px solid var(--secondary-color); }
+        .instructions .step-number { background-color: var(--secondary-color); color: white; font-weight: bold; border-radius: 50%; min-width: 28px; height: 28px; display: flex; justify-content: center; align-items: center; margin-right: 15px; flex-shrink: 0; }
+        .instructions .step-content { line-height: 1.6; }
+        
+        #purchase-suggestion-section, .combo-recommendation-section {
+            padding: 20px;
+            background: linear-gradient(135deg, #e0f2f1, #f1f8e9);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+        }
+        .combo-recommendation-section { background: linear-gradient(135deg, #fff3e0, #fbe9e7); border-color: var(--accent-color); margin-top: 20px; }
+        .purchase-card { display: flex; gap: 20px; align-items: center; }
+        .purchase-image { width: 120px; height: 120px; border-radius: 8px; flex-shrink: 0; object-fit: cover; border: 1px solid #ddd; }
+        .purchase-details { flex-grow: 1; }
+        .purchase-details h4 { margin: 0 0 5px 0; font-size: 18px; color: var(--primary-color); }
+        .purchase-details .desc { font-size: 14px; color: #555; margin-bottom: 15px; }
+        .purchase-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .quantity-selector { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 5px; }
+        .quantity-selector button { width: 30px; height: 30px; border: none; background-color: #f0f0f0; cursor: pointer; font-size: 18px; }
+        .quantity-selector .quantity { width: 40px; text-align: center; font-weight: bold; font-size: 16px; }
+        .total-price { font-size: 18px; font-weight: bold; color: var(--danger-color); }
+        .add-to-list-btn {
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .batch-calculator { padding: 20px; background-color: #E8F5E9; border-radius: 8px; }
+        .batch-controls { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .batch-controls label { font-weight: 500; }
+        .batch-controls input { width: 80px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+        .batch-controls button { padding: 8px 16px; background-color: var(--primary-color); color: white; border:none; border-radius: 5px; cursor: pointer; }
+        #batch-result { font-size: 14px; }
+        #batch-result ul { padding-left: 20px; margin: 0; }
+        
+        .snack-calculator { padding: 20px; background-color: #FFF3E0; border-radius: 8px; }
+        .snack-controls { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .snack-controls select, .snack-controls input { padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+        .snack-controls button { padding: 8px 16px; background-color: var(--accent-color); color: #333; border:none; border-radius: 5px; cursor: pointer; font-weight: 500; }
+        #snack-result { margin-top: 15px; font-weight: 500; }
+        #snack-result .safe { color: var(--success-color); }
+        #snack-result .danger { color: var(--danger-color); }
+        
+        .rotation-suggestion ul { list-style: none; padding: 0; display: flex; gap: 15px; flex-wrap: wrap; }
+        .rotation-suggestion button { background-color: #f0f0f0; border: 1px solid #ccc; padding: 10px 15px; border-radius: 8px; cursor: pointer; text-align: left; width: 100%; transition: background-color 0.2s, border-color 0.2s; }
+        .rotation-suggestion button:hover { background-color: #e0e0e0; border-color: #aaa; }
+        .rotation-suggestion button strong { display: block; font-size: 16px; color: var(--primary-color); }
+        .rotation-suggestion button span { font-size: 13px; color: #555; }
+
+        .disclaimer { margin-top: 30px; padding: 15px; background-color: #FFF3E0; border-left: 5px solid #FF9800; font-size: 14px; line-height: 1.7; }
+        .disclaimer strong { color: #E65100; }
+        
+        .email-capture-section {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #E8F5E9;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .email-capture-section h4 { margin: 0 0 10px 0; font-size: 18px; color: var(--primary-color); }
+        .email-capture-section p { margin: 0 0 20px 0; color: #555; font-size: 14px; }
+        #email-capture-form { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        #email-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        #email-submit-btn {
+            padding: 12px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .footer-notes { text-align: center; font-size: 12px; color: #999; margin-top: 40px; }
+        .footer-notes .toggle-sources { color: var(--primary-color); cursor: pointer; text-decoration: underline; font-weight: 500; }
+        .sources-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; text-align: left; background: #f9f9f9; padding: 0 20px; margin-top: 10px; border-radius: 5px; font-size: 13px; }
+        .sources-content.show { max-height: 500px; padding: 15px 20px; }
+        .sources-content ul { padding-left: 20px; }
+
+        #shopping-list-icon { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background-color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; transition: transform 0.2s; }
+        #shopping-list-icon:hover { transform: scale(1.1); }
+        #shopping-list-icon svg { color: white; width: 32px; height: 32px; }
+        #shopping-list-icon .badge { position: absolute; top: -5px; right: -5px; background-color: var(--danger-color); color: white; border-radius: 50%; width: 24px; height: 24px; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+        
+        #shopping-list-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1001; display: none; align-items: center; justify-content: center; }
+        #shopping-list-modal.show { display: flex; }
+        .list-modal-content { background-color: white; border-radius: 10px; width: 90%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; }
+        .list-modal-header { padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
+        .list-modal-header h3 { margin: 0; font-size: 20px; color: var(--primary-color); }
+        .list-modal-header .close-btn { font-size: 24px; border: none; background: none; cursor: pointer; }
+        .list-modal-body { padding: 20px; overflow-y: auto; }
+        .list-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .list-item:last-child { border-bottom: none; margin-bottom: 0; }
+        .list-item-name { flex-grow: 1; font-weight: 500; }
+        .list-item-price { color: #555; width: 80px; text-align: right; }
+        .list-item-remove { background: none; border: none; color: var(--danger-color); cursor: pointer; font-size: 12px; text-decoration: underline; }
+        .list-modal-footer { padding: 20px; border-top: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; background-color: #f9f9f9; }
+        .list-total-price { font-size: 20px; font-weight: bold; }
+        .checkout-btn { padding: 12px 25px; background-color: var(--accent-color); border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        #empty-list-msg { text-align: center; color: #888; }
+
+        @media print {
+            body { padding: 0; background-color: white; }
+            .container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            header, form, .profile-manager, .result-actions, #purchase-suggestion-section, .combo-recommendation-section, .email-capture-section, .batch-calculator, .snack-calculator, .rotation-suggestion, .disclaimer, .footer-notes, #shopping-list-icon, #shopping-list-modal { display: none; }
+            #result-section { display: block !important; margin-top: 0; padding-top: 0; border-top: none; }
+            .recipe-card { border: none; }
+            .recipe-body { padding: 0; }
+            h3 { margin-top: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .form-section { grid-template-columns: 1fr; }
+            .container { padding: 20px; }
+            header h1 { font-size: 24px; }
+            .pie-chart-container { flex-direction: column; text-align: center; }
+            .pie-legend { width: 100%; }
+            .legend-value { text-align: left; }
+            #recipe-image { height: 200px; }
+            .purchase-card { flex-direction: column; }
+            .add-to-list-btn { width: 100%; margin-left: 0; margin-top: 15px; }
+            .responsive-table thead { display: none; }
+            .responsive-table tr { display: block; margin-bottom: 1.5em; border: 1px solid #ddd; border-radius: 5px; padding: 10px; }
+            .responsive-table td { display: block; text-align: right; border: none; padding-left: 50%; position: relative; padding-top: 8px; padding-bottom: 8px; }
+            .responsive-table td::before { content: attr(data-label); position: absolute; left: 10px; width: calc(50% - 20px); text-align: left; font-weight: bold; color: var(--primary-color); }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Pawfect Recipe Generator</h1>
-      <p class="subtitle">Create personalized fresh food recipes for your dog</p>
-    </header>
 
-    <div class="form-section">
-      <form id="recipe-form">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="recipe-choice">Choose Recipe</label>
-            <select id="recipe-choice" required>
-              <option value="">Select a recipe...</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="dog-name">Dog's Name</label>
-            <input type="text" id="dog-name" placeholder="e.g., Max" required />
-          </div>
-          <div class="form-group">
-            <label for="dog-weight">Weight (kg)</label>
-            <input type="number" id="dog-weight" step="0.1" min="0.5" placeholder="e.g., 10.5" required />
-          </div>
-          <div class="form-group">
-            <label for="activity-level">Activity Level</label>
-            <select id="activity-level" required>
-              <option value="">Select activity level...</option>
-              <option value="1.6">Puppy (up to 1 year)</option>
-              <option value="1.8">Active Adult</option>
-              <option value="1.6">Typical Adult</option>
-              <option value="1.4">Senior/Less Active</option>
-              <option value="1.2">Overweight/Prone</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="meals-per-day">Meals per Day</label>
-            <select id="meals-per-day" required>
-              <option value="2">2 meals</option>
-              <option value="3">3 meals</option>
-              <option value="1">1 meal</option>
-            </select>
-          </div>
+    <div class="container">
+        <header>
+            <h1>pp pawfact 狗狗個人化鮮食顧問</h1>
+            <p>管理狗狗檔案、計算零食熱量、輪替食譜，打造全方位健康計畫</p>
+        </header>
+
+        <div id="profile-manager" class="profile-manager">
+            <div class="profile-controls">
+                <label for="profile-select">狗狗檔案:</label>
+                <select id="profile-select">
+                    <option value="">-- 載入已存檔的狗狗 --</option>
+                </select>
+            </div>
+            <button id="save-profile-btn" class="save-btn">儲存目前狗狗資料</button>
+            <span id="profile-message"></span>
         </div>
-        <button type="submit" class="btn">Generate Recipe</button>
-      </form>
+
+        <form id="dog-form" class="form-section">
+            <div class="form-group full-width">
+                <label for="health-issue">1. 主要健康目標</label>
+                <select id="health-issue" name="health-issue" required>
+                    <option value="" disabled selected>-- 點此選擇 --</option>
+                    <option value="general">無特定問題 / 日常保健</option>
+                    <option value="weight_loss">體重過重 / 減重需求</option>
+                    <option value="performance">高活動量 / 增肌需求</option>
+                    <option value="joint">關節保養 / 行動不便</option>
+                    <option value="skin">皮膚敏感 / 搔癢</option>
+                    <option value="coat">毛髮乾燥 / 缺乏光澤</option>
+                    <option value="gi_health">腸胃敏感 / 消化不良</option>
+                    <option value="urinary">泌尿道問題</option>
+                    <option value="heart">心臟保健</option>
+                    <option value="tear_stain">淚痕問題</option>
+                    <option value="eye_health">眼睛保健</option>
+                    <option value="senior">高齡犬綜合保健</option>
+                    <option value="puppy">幼犬發育成長</option>
+                    <option value="respiratory">呼吸道 / 氣管保養</option>
+                </select>
+            </div>
+            
+            <div class="form-group full-width">
+                <label>2. 請勾選需要避開的過敏原 (可複選)</label>
+                <div id="allergen-filter" class="allergen-group"></div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="recipe-choice">3. 推薦食譜 (已過濾過敏原)</label>
+                <select id="recipe-choice" name="recipe-choice" required disabled>
+                    <option value="" disabled selected>-- 請先選擇健康目標 --</option>
+                </select>
+                <div id="recipe-warning"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="dog-name">4. 狗狗的名字</label>
+                <input type="text" id="dog-name" name="dog-name" placeholder="例如：旺財" required>
+            </div>
+            <div class="form-group">
+                <label for="dog-age">狗狗年齡 (歲)</label>
+                <input type="number" id="dog-age" name="dog-age" placeholder="例如：5" step="0.1" min="0.1" required>
+            </div>
+            <div class="form-group">
+                <label for="dog-weight">狗狗體重 (公斤)</label>
+                <input type="number" id="dog-weight" name="dog-weight" placeholder="例如：5.2" step="0.1" min="0.5" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="activity-level">體態與活動量 (DER係數)</label>
+                <select id="activity-level" name="activity-level">
+                    <option value="1.0">過重/需減重</option>
+                    <option value="1.2">低活動量/易胖體質</option>
+                    <option value="1.4">高齡犬/活動量偏低</option>
+                    <option value="1.6" selected>已絕育成犬/正常活動</option>
+                    <option value="1.8">未絕育成犬/正常活動</option>
+                    <option value="2.0">高活動量/工作犬</option>
+                    <option value="2.5">幼犬 (4-12個月)</option>
+                    <option value="3.0">幼犬 (&lt;4個月)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>是否絕育？</label>
+                <div class="option-group">
+                    <label><input type="radio" name="neutered" value="yes" checked> 是</label>
+                    <label><input type="radio" name="neutered" value="no"> 否</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>每日餵食餐數</label>
+                <select id="meals-per-day" name="meals-per-day">
+                    <option value="2">2 餐</option>
+                    <option value="3">3 餐</option>
+                </select>
+            </div>
+
+            <button type="submit" class="calculate-btn">產生專屬食譜</button>
+        </form>
+
+        <div id="result-section">
+            <div class="result-actions">
+                <button class="print-btn" onclick="window.print()">🖨️ 友善列印 / 儲存為PDF</button>
+            </div>
+            <div class="recipe-card">
+                <div class="recipe-header">
+                    <img id="recipe-image" src="" alt="食譜成品照片">
+                    <div class="recipe-header-content">
+                        <h2 id="recipe-title"></h2>
+                        <div id="recipe-target-issue"></div>
+                        <p id="recipe-subtitle"></p>
+                        <div id="recipe-special-note" style="display: none;"></div>
+                    </div>
+                </div>
+                <div class="recipe-body">
+                    <div class="result-subsection">
+                        <h3>... 每日餵食計畫 ...</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item"><div class="label">每日所需熱量</div><div class="value" id="daily-calories"></div></div>
+                            <div class="summary-item"><div class="label">每日總餵食量</div><div class="value" id="daily-food-weight"></div></div>
+                            <div class="summary-item"><div class="label">每餐份量</div><div class="value" id="meal-portion"></div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-subsection">
+                        <h3>... 巨量營養素分析 ...</h3>
+                        <div class="pie-chart-container">
+                            <div id="macro-pie-chart" class="pie-chart"></div>
+                            <div id="macro-pie-legend" class="pie-legend"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-subsection">
+                        <h3>... 每日食材份量 ...</h3>
+                        <table id="ingredients-table" class="responsive-table">
+                            <thead><tr><th>食材</th><th>份量(克)</th><th>功效與作用</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="purchase-suggestion-section" class="result-subsection">
+                        <h3>... 專屬凍乾零食加購 ...</h3>
+                        <p style="font-size:14px; color:#555; margin-top: -10px;">根據這份食譜的蛋白質來源，我們為 <strong id="purchase-dog-name"></strong> 推薦最適合的凍乾零食！</p>
+                        <div id="purchase-suggestion-content"></div>
+                        <div id="combo-recommendation-content"></div>
+                    </div>
+                    
+                    <div class="result-subsection">
+                        <h3>... 批量製作計算機 ...</h3>
+                        <div class="batch-calculator">
+                            <div class="batch-controls">
+                                <label for="batch-days">我想一次製作</label>
+                                <input type="number" id="batch-days" value="7" min="1">
+                                <label for="batch-days">天的份量</label>
+                                <button id="calculate-batch-btn">計算總量</button>
+                            </div>
+                            <div id="batch-result"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-subsection">
+                        <h3>... 零食熱量影響評估 ...</h3>
+                        <div class="snack-calculator">
+                            <div class="snack-controls">
+                                <select id="snack-select"></select>
+                                <input type="number" id="snack-quantity" value="1" min="1">
+                                <span id="snack-unit">份</span>
+                                <button id="calculate-snack-btn">評估影響</button>
+                            </div>
+                            <div id="snack-result"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-subsection instructions">
+                        <h3>... 製作步驟 ...</h3>
+                        <h4>方法一：溫和蒸煮法 (推薦)</h4>
+                        <ol>
+                            <li><div class="step-number">1</div><div class="step-content"><strong>準備食材：</strong>將所有食材按表單重量準備好。肉類切塊；所有蔬果去皮切丁；菇類切碎。</div></li>
+                            <li><div class="step-number">2</div><div class="step-content"><strong>溫和蒸煮：</strong>將肉類和所有蔬果放入耐熱碗中，用電鍋或蒸鍋蒸煮約20分鐘，直到所有食材都熟透軟爛。</div></li>
+                        </ol>
+                        
+                        <h4>方法二：香氣拌炒法 (可選)</h4>
+                        <ol>
+                            <li><div class="step-number">1</div><div class="step-content"><strong>準備食材：</strong>同蒸煮法。</div></li>
+                            <li><div class="step-number">2</div><div class="step-content"><strong>開始拌炒：</strong>在鍋中加入少量犬隻可食用的油(如椰子油、橄欖油)，熱鍋後先下肉類，炒至約七分熟。</div></li>
+                            <li><div class="step-number">3</div><div class="step-content"><strong>加入蔬菜：</strong>加入質地較硬的蔬菜(如胡蘿蔔)拌炒，再加入質地較軟的蔬菜，可加入少量水幫助軟化，煮至所有食材熟透。</div></li>
+                        </ol>
+
+                        <h4>共同關鍵步驟 (無論使用何種方法)</h4>
+                        <ol>
+                            <li><div class="step-number" style="background-color: var(--danger-color);">!</div><div class="step-content" style="border-left-color: var(--danger-color);"><strong><span style="color: #E65100;">關鍵步驟：降溫！</span></strong>務必將煮好的鮮食完全放涼至室溫(約38°C以下)，摸起來不燙手為止。熱食會破壞補充品的營養。</div></li>
+                            <li><div class="step-number" style="background-color: var(--danger-color);">!</div><div class="step-content" style="border-left-color: var(--danger-color);"><strong>添加營養：</strong>在完全冷卻的鮮食中，拌入所有「必需營養補充品」。攪拌均勻，即可餵食！</div></li>
+                        </ol>
+                    </div>
+
+                    <div class="result-subsection">
+                        <h3>... 必需營養補充品 (每日份量) ...</h3>
+                        <table id="supplements-table" class="responsive-table supplements-table">
+                            <thead><tr><th>補充品</th><th>建議份量</th><th>說明</th><th>天然食材換算參考</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="result-subsection rotation-suggestion">
+                        <h3>... 建議的輪替食譜 ...</h3>
+                        <p style="font-size:14px; color:#555; margin-top: -10px;">定期輪替不同蛋白質來源的食譜，有助於營養均衡並降低食物不耐的風險。以下是其他符合您設定的健康目標與過敏原篩選的食譜：</p>
+                        <ul id="rotation-list"></ul>
+                    </div>
+
+                    <div class="disclaimer">
+                        <strong>重要提醒：</strong>
+                        <ul>
+                            <li>本計算結果為基於標準公式的估算值，不能取代專業獸醫師或寵物營養師的建議。</li>
+                            <li>每隻狗狗的代謝率和活動量均有差異，請在開始新食譜後，每週監控狗狗的體重和身體狀況，並適時微調份量。</li>
+                            <li><strong>蛋殼粉、魚油和綜合維生素是確保自製鮮食營養均衡的必需品，不可省略。</strong></li>
+                            <li>更換食譜時請採漸進式，用7-10天時間逐步替換，以免腸胃不適。</li>
+                        </ul>
+                    </div>
+
+                    <div class="email-capture-section">
+                        <h4>覺得這份計畫很棒嗎？</h4>
+                        <p>輸入您的 Email，我們會將這份專屬健康計畫寄給您，方便隨時查閱！</p>
+                        <form id="email-capture-form">
+                            <input type="email" id="email-input" placeholder="請輸入您的 Email" required>
+                            <button type="submit" id="email-submit-btn">訂閱並接收計畫</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer-notes">
+            <p><a href="javascript:void(0);" id="toggle-sources-btn" class="toggle-sources">點此展開/收合 計算依據與參考資料</a></p>
+            <div id="sources-content" class="sources-content">
+                <p><strong>專業審核：</strong>本系統之計算邏輯與食譜建議，由 pp pawfact 寵物營養顧問基於公開的獸醫營養學標準生成，目的為提供飼主教育與參考，不能取代專業診斷。</p>
+                <p><strong>計算依據：</strong></p>
+                <ul>
+                    <li><strong>靜態能量需求 (RER):</strong> <code>70 * (體重kg)^0.75</code>。此為犬貓最廣泛使用的基礎代謝計算公式。</li>
+                    <li><strong>每日能量需求 (DER):</strong> <code>RER * DER係數</code>。DER係數參考美國國家科學研究委員會(NRC)與獸醫臨床手冊的建議值，綜合了犬隻的年齡、活動量、絕育狀態與體態目標。</li>
+                </ul>
+                <p><strong>營養補充品參考：</strong></p>
+                <ul>
+                    <li>鈣質與魚油的建議量，參考了自製鮮食的通用安全準則，旨在平衡鈣磷比與補充Omega-3脂肪酸。</li>
+                    <li>特殊補充品（如牛磺酸、葡萄糖胺）的建議，基於相關研究文獻中對特定健康狀況的支持劑量。</li>
+                </ul>
+            </div>
+        </footer>
     </div>
 
-    <div id="result-section" class="result-section">
-      <div id="recipe-output"></div>
+    <div id="shopping-list-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 18c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm0-3l1.1-2h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4.96c.34-.65-.11-1.46-.83-1.46H5.21L4.27 2H2v2h2l3.6 7.59L7.42 15H17v-2H7z"/></svg>
+        <span class="badge" id="shopping-list-badge" style="display: none;">0</span>
     </div>
-  </div>
 
-  <footer>
-    <p>© 2025 Pawfect Recipes • Not veterinary advice • Consult your vet</p>
-  </footer>
+    <div id="shopping-list-modal">
+        <div class="list-modal-content">
+            <div class="list-modal-header">
+                <h3>pp pawfact 採購清單</h3>
+                <button class="close-btn" id="list-modal-close-btn">&times;</button>
+            </div>
+            <div class="list-modal-body" id="list-modal-body">
+                <p id="empty-list-msg">您的採購清單是空的。</p>
+            </div>
+            <div class="list-modal-footer">
+                <div class="list-total-price" id="list-total-price">總計: NT$ 0</div>
+                <button class="checkout-btn" id="checkout-btn">前往結帳</button>
+            </div>
+        </div>
+    </div>
 
-  <!-- PAYWALL + MODAL ONLY -->
-  <script>
-    // === FIREBASE CONFIG ===
-    const firebaseConfig = {
-      apiKey: "AIzaSyAH1vDSk0CGzGwobDwPo0Kl0dB6dhKeNvk",
-      authDomain: "pprecipe-pay-auth.firebaseapp.com",
-      projectId: "pprecipe-pay-auth",
-      storageBucket: "pprecipe-pay-auth.firebasestorage.app",
-      messagingSenderId: "741698236045",
-      appId: "1:741698236045:web:fcb73fe358747d4b3e7cc4"
-    };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+    <script>
+        // --- DATA LIBRARIES ---
+        const recipes = {
+            // --- NEW RECIPE: Autumn Pear & Rabbit Therapeutic Soup ---
+            autumn_pear_rabbit_soup: {
+                id: 'autumn_pear_rabbit_soup',
+                name: "秋燥梨汁兔肉餐 (輔餐)",
+                primaryTarget: "秋季潤燥與呼吸道保健",
+                description: "一份溫和滋潤的季節性食療輔餐，選用低敏兔肉搭配多種潤肺食材，幫助舒緩秋燥引起的不適。",
+                caloriesPerGram: 1.0, // Low calorie density due to high water content
+                tags: ['respiratory', 'general'],
+                macros: { protein: 45, fat: 20, carbs: 35 },
+                specialNote: "【重要】此為輔助食療餐，非主食。其熱量與營養素不符合主食標準，僅可作為主食的少量添加，份量不應超過每日總餵食量的10%。",
+                imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#FDF4E3"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#B9770E">秋潤兔肉餐</text></svg>')}`,
+                ingredients: [
+                    { name: "兔肉", percentage: 0.40, note: "極低敏的新穎蛋白質，性涼，適合體質燥熱或需要避開常見過敏原的犬隻。", allergen_id: 'rabbit' },
+                    { name: "雪梨", percentage: 0.10, note: "富含水分，有助於滋潤呼吸道，緩解乾燥。務必去核。", },
+                    { name: "白蘿蔔", percentage: 0.10, note: "有助於理氣消食，其天然酵素能幫助消化。", },
+                    { name: "冬瓜", percentage: 0.10, note: "高含水量、低熱量，有助於補充水分與清熱。", },
+                    { name: "茭白", percentage: 0.10, note: "富含水分與纖維，有助於腸道蠕動。", },
+                    { name: "蓮子 (乾燥)", percentage: 0.08, note: "有助於健脾安神，使用前需泡發並去芯。", },
+                    { name: "白扁豆 (乾燥)", percentage: 0.08, note: "有助於健脾化濕，使用前需充分泡發。", },
+                    { name: "銀耳 (乾燥)", percentage: 0.04, note: "富含植物膠質，是傳統的潤肺食材。使用前需充分泡發。", }
+                    // 桂花與蜂蜜因份量極少且為後添加，不計入主要百分比
+                ]
+            },
+            // --- End of New Recipe ---
+            weight_loss_recipe: { id: 'weight_loss_recipe', name: "椰汁火雞低脂餐", primaryTarget: "體重管理與減重", description: "專為體重管理設計，利用高纖維食材創造飽足感，同時以優質蛋白維持活力。", caloriesPerGram: 1.1, tags: ['weight_loss', 'general'], macros: { protein: 40, fat: 35, carbs: 25 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#F5B041"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">火雞低脂餐</text></svg>')}`, ingredients: [ { name: "去皮火雞胸肉", percentage: 0.50, note: "提供高品質、低脂肪的動物性蛋白質，是維持肌肉量、促進新陳代謝的基礎。", allergen_id: 'turkey' }, { name: "馬鈴薯", percentage: 0.15, note: "富含抗性澱粉的優質碳水化合物，可提供穩定能量與飽足感，有益腸道菌叢。" }, { name: "山藥", percentage: 0.10, note: "含有黏液蛋白，有助於保護腸胃道黏膜，其薯蕷皂素亦有助於調節生理機能。" }, { name: "佛手瓜", percentage: 0.10, note: "極低熱量、高含水量的蔬菜，能增加食物體積與飽足感，同時補充水分。" }, { name: "綜合菇類", percentage: 0.05, note: "富含β-葡聚醣等多醣體，有助於調節免疫系統功能，並提供多種微量元素。" }, { name: "黃蘿蔔", percentage: 0.05, note: "β-胡蘿蔔素的良好來源，可在體內轉化為維生素A，對視力保健至關重要。" }, { name: "無糖椰漿", percentage: 0.05, note: "提供中鏈脂肪酸(MCT)，可作為快速能量來源，並增加食譜風味。" } ] },
+            respiratory_recipe: { id: 'respiratory_recipe', name: "氣管舒潤雞肉燉菜", primaryTarget: "呼吸道與氣管舒潤", description: "一道溫和滋潤的食療燉菜，精選對呼吸系統有益的食材，舒緩氣管不適。", caloriesPerGram: 1.2, tags: ['respiratory', 'senior'], macros: { protein: 40, fat: 30, carbs: 30 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#FAD7A0"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#A0522D">氣管舒潤餐</text></svg>')}`, ingredients: [ { name: "去皮雞胸肉", percentage: 0.50, note: "溫和、易消化的優質蛋白質，為身體提供必需胺基酸，支持整體健康。", allergen_id: 'chicken' }, { name: "水梨", percentage: 0.15, note: "富含水分與天然酵素，有助於滋潤呼吸道黏膜，緩解乾燥引起的不適。" }, { name: "山藥", percentage: 0.15, note: "傳統食療中常用於健脾益肺，其黏液蛋白有助於保護消化道與呼吸道黏膜。" }, { name: "銀耳 (白木耳)", percentage: 0.10, note: "富含植物性膠質與多醣體，有助於保濕潤燥，對呼吸道健康有益。" }, { name: "南瓜", percentage: 0.10, note: "提供豐富的β-胡蘿蔔素，是強效抗氧化劑，有助於保護細胞免於氧化損傷。" } ] },
+            joint_recipe: { id: 'joint_recipe', name: "鮭魚雞肉關節餐", primaryTarget: "關節保健與靈活性維護", description: "專為關節設計的『行動力加強餐』，結合抗發炎及軟骨修復的關鍵食材。", caloriesPerGram: 1.25, tags: ['joint', 'senior'], macros: { protein: 35, fat: 45, carbs: 20 }, specialSupplements: ['glucosamine'], recommendedSupplements: ['sup_gl'], imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#82E0AA"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">關節保健餐</text></svg>')}`, ingredients: [ { name: "綠唇貝", percentage: 0.10, note: "天然葡萄糖胺與軟骨素的極佳來源，是構成關節軟骨及滑液的關鍵成分，有助於維持關節活動力。" }, { name: "雞肉", percentage: 0.35, note: "提供建構肌肉所需的高品質蛋白質，強健的肌肉能更好地支撐和保護關節。", allergen_id: 'chicken' }, { name: "鮭魚", percentage: 0.20, note: "富含Omega-3脂肪酸(EPA/DHA)，具有強大的抗發炎效果，有助於緩解關節不適。", allergen_id: 'fish' }, { name: "地瓜", percentage: 0.20, note: "富含抗氧化物β-胡蘿蔔素及維生素C，有助於對抗體內自由基，減緩關節老化。" }, { name: "青花菜", percentage: 0.15, note: "含有蘿蔔硫素，是一種強效抗氧化劑，並提供維生素K，對骨骼健康有關鍵作用。" } ] },
+            heart_recipe: { id: 'heart_recipe', name: "護心火雞沙丁魚餐", primaryTarget: "心血管系統健康支持", description: "為守護最重要的『心』而設計，富含牛磺酸、CoQ10和Omega-3的護心饗宴。", caloriesPerGram: 1.2, tags: ['heart', 'senior'], macros: { protein: 38, fat: 42, carbs: 20 }, specialSupplements: ['taurine'], imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#E74C3C"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">心臟保健餐</text></svg>')}`, ingredients: [ { name: "火雞胸肉", percentage: 0.30, note: "富含牛磺酸的低脂蛋白質，牛磺酸是維持心肌正常功能不可或缺的胺基酸。", allergen_id: 'turkey' }, { name: "沙丁魚", percentage: 0.25, note: "Omega-3脂肪酸和輔酶Q10的絕佳來源，有助於心血管保健與提供心肌細胞能量。", allergen_id: 'fish' }, { name: "白米", percentage: 0.20, note: "提供易於消化吸收的碳水化合物，作為純淨的能量來源，避免造成身體額外負擔。", allergen_id: 'grain' }, { name: "菠菜", percentage: 0.15, note: "富含鉀和鎂，這兩種礦物質對於維持正常心律和血壓至關重要。" }, { name: "胡蘿蔔", percentage: 0.10, note: "提供β-胡蘿蔔素，作為抗氧化劑保護血管內皮細胞，減少氧化損傷。" } ] },
+            urinary_recipe: { id: 'urinary_recipe', name: "泌尿道雞肉水潤餐", primaryTarget: "泌尿道健康維護", description: "透過『多喝水、多排尿』的食療概念，打造不利壞菌生長的泌尿道環境。", caloriesPerGram: 1.15, tags: ['urinary'], macros: { protein: 45, fat: 25, carbs: 30 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#5DADE2"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">泌尿道保健餐</text></svg>')}`, ingredients: [ { name: "去皮雞胸肉", percentage: 0.50, note: "優質的低磷蛋白質，有助於在維持營養的同時，減少腎臟的負擔。", allergen_id: 'chicken' }, { name: "冬瓜", percentage: 0.20, note: "高含水量蔬菜，有助於增加尿量，物理性地沖刷泌尿道，維持潔淨。" }, { name: "節瓜 (夏南瓜)", percentage: 0.15, note: "富含水分且草酸鹽含量低，有助於稀釋尿液，降低特定類型結石形成的風險。" }, { name: "無糖蔓越莓", percentage: 0.05, note: "含有A型原花青素(PACs)，能抑制細菌附著於泌尿道壁，是泌尿道保健的明星食材。" }, { name: "白米", percentage: 0.10, note: "提供純淨、低敏的能量，避免複雜成分對泌尿系統造成刺激。", allergen_id: 'grain' } ] },
+            senior_recipe: { id: 'senior_recipe', name: "黃金歲月鮭魚雞肉餐", primaryTarget: "高齡犬綜合保健", description: "專為黃金歲月設計的全方位營養餐，易消化、高抗氧化，守護大腦、關節與心臟。", caloriesPerGram: 1.2, tags: ['senior', 'heart', 'joint', 'eye_health'], macros: { protein: 35, fat: 40, carbs: 25 }, specialSupplements: ['glucosamine', 'taurine'], recommendedSupplements: ['sup_gl'], imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#D4AF37"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">高齡犬綜合餐</text></svg>')}`, ingredients: [ { name: "鮭魚", percentage: 0.25, note: "Omega-3 (DHA)是腦細胞與視網膜的重要成分，有助於高齡犬的認知與視力保健。", allergen_id: 'fish' }, { name: "去皮雞胸肉", percentage: 0.25, note: "提供易消化的優質蛋白質，幫助高齡犬維持肌肉量，避免肌少症。", allergen_id: 'chicken' }, { name: "南瓜", percentage: 0.20, note: "富含纖維有助於腸道蠕動，其抗氧化物β-胡蘿蔔素則能對抗老化帶來的細胞損傷。" }, { name: "藍莓", percentage: 0.10, note: "富含花青素等強力抗氧化物，有助於保護腦神經細胞，延緩認知功能退化。" }, { name: "菠菜", percentage: 0.10, note: "提供葉黃素、維生素K及多種礦物質，對眼睛、骨骼和心血管系統均有益處。" }, { name: "燕麥", percentage: 0.10, note: "富含水溶性纖維β-葡聚醣，有助於穩定血糖和維持心血管健康。", allergen_id: 'grain' } ] },
+            puppy_recipe: { id: 'puppy_recipe', name: "黃金發育牛雞餐", primaryTarget: "幼犬發育成長", description: "為生命起跑線注入滿滿能量！高蛋白、高熱量，支持大腦、視力與骨骼的黃金發育期。", caloriesPerGram: 1.4, tags: ['puppy', 'performance'], macros: { protein: 35, fat: 45, carbs: 20 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#FFC0CB"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#A0522D">幼犬發育餐</text></svg>')}`, ingredients: [ { name: "雞腿肉", percentage: 0.30, note: "提供豐富的蛋白質與脂肪，是幼犬快速成長所需能量和肌肉建構的基礎。", allergen_id: 'chicken' }, { name: "牛絞肉 (瘦)", percentage: 0.25, note: "富含鐵、鋅和維生素B群，對於紅血球生成、免疫系統發展至關重要。", allergen_id: 'beef' }, { name: "雞蛋 (全蛋)", percentage: 0.10, note: "完美的蛋白質來源，蛋黃中的膽鹼是腦部神經系統發育的關鍵營養素。", allergen_id: 'egg' }, { name: "地瓜", percentage: 0.15, note: "提供複合式碳水化合物，穩定地釋放能量，支持幼犬的高活動力需求。" }, { name: "胡蘿蔔", percentage: 0.10, note: "豐富的維生素A前驅物(β-胡蘿蔔素)，對視力、皮膚和免疫系統的正常發育不可或缺。" }, { name: "鮭魚油", percentage: 0.10, note: "DHA是促進幼犬大腦和視網膜發育的黃金營養素，讓狗狗更聰明、眼睛更明亮。", allergen_id: 'fish' } ] },
+            gi_health_recipe: { id: 'gi_health_recipe', name: "腸胃舒緩雞肉餐", primaryTarget: "腸胃敏感 / 消化不良", description: "給敏感腸胃一個溫柔的擁抱。極簡、低敏、易消化的配方，讓腸胃好好休息再出發。", caloriesPerGram: 1.2, tags: ['gi_health', 'general'], macros: { protein: 40, fat: 20, carbs: 40 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#E8F8F5"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#1ABC9C">腸胃舒緩餐</text></svg>')}`, ingredients: [ { name: "去皮雞胸肉", percentage: 0.50, note: "單一、低脂的蛋白質來源，易於消化，可減少腸胃負擔，適合腸胃敏感時期。", allergen_id: 'chicken' }, { name: "南瓜", percentage: 0.25, note: "提供豐富的可溶性與不可溶性纖維，有助於調節腸道蠕動，改善便秘或腹瀉。" }, { name: "白米", percentage: 0.15, note: "煮熟的白米是極易消化的碳水化合物，能快速提供能量，同時有助於糞便成形。", allergen_id: 'grain' }, { name: "高麗菜", percentage: 0.10, note: "含有天然的維生素U (S-甲基甲硫氨酸)，有助於保護和修復腸胃道黏膜。" } ] },
+            coat_recipe: { id: 'coat_recipe', name: "美毛亮澤鮭魚餐", primaryTarget: "毛髮乾燥 / 缺乏光澤", description: "打造一件閃閃動人的『毛大衣』！富含關鍵脂肪酸與營養素，讓毛髮由內而外水潤亮澤。", caloriesPerGram: 1.3, tags: ['coat', 'skin', 'general'], macros: { protein: 30, fat: 50, carbs: 20 }, recommendedSupplements: ['fd_fish'], imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#AED6F1"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#3498DB">美毛亮澤餐</text></svg>')}`, ingredients: [ { name: "鮭魚", percentage: 0.40, note: "富含Omega-3脂肪酸(EPA/DHA)，有助於抗發炎、維持皮膚屏障健康，使毛髮亮澤。", allergen_id: 'fish' }, { name: "雞蛋 (含蛋黃)", percentage: 0.15, note: "蛋黃是生物素和卵磷脂的絕佳來源，兩者都是維持皮膚健康和毛髮生長的重要營養素。", allergen_id: 'egg' }, { name: "燕麥", percentage: 0.20, note: "提供維生素B群和礦物質鋅，有助於維持皮膚健康，並提供優質纖維。", allergen_id: 'grain' }, { name: "地瓜", percentage: 0.15, note: "富含維生素A的前驅物β-胡蘿蔔素，維生素A對於皮膚細胞的正常生長和修復至關重要。" }, { name: "葵花籽 (無鹽)", percentage: 0.10, note: "維生素E和亞麻油酸的豐富來源，維生素E是重要的抗氧化劑，能保護皮膚細胞。" } ] },
+            skin_recipe: { id: 'skin_recipe', name: "低敏護膚鴨肉餐", primaryTarget: "皮膚敏感 / 搔癢", description: "對抗搔癢不適的『滅火配方』，以低敏蛋白搭配抗發炎食材，從根本調理皮膚健康。", caloriesPerGram: 1.25, tags: ['skin'], macros: { protein: 38, fat: 40, carbs: 22 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#D5F5E3"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#28B463">低敏護膚餐</text></svg>')}`, ingredients: [ { name: "鴨肉", percentage: 0.50, note: "屬於較不易引起過敏反應的新穎蛋白質，適合食物敏感導致皮膚問題的犬隻。", allergen_id: 'duck' }, { name: "藜麥", percentage: 0.20, note: "無麩質的偽穀物，富含完整的胺基酸和多種礦物質，是低敏的能量來源。", allergen_id: 'grain' }, { name: "地瓜", percentage: 0.15, note: "富含抗氧化物β-胡蘿蔔素，有助於清除體內自由基，減輕發炎反應。" }, { name: "薑黃粉", percentage: 0.05, note: "其活性成分薑黃素是強效的天然抗發炎劑，有助於從體內舒緩皮膚發炎。" }, { name: "椰子油", percentage: 0.10, note: "富含月桂酸，具有抗菌特性，同時中鏈脂肪酸有助於維持皮膚健康。" } ] },
+            tear_stain_recipe: { id: 'tear_stain_recipe', name: "淚痕清爽鴨肉餐", primaryTarget: "淚痕問題", description: "告別『小花臉』的體內調理餐。從低敏、抗炎、利濕著手，打造清爽明亮的雙眸。", caloriesPerGram: 1.2, tags: ['tear_stain', 'skin', 'eye_health'], macros: { protein: 40, fat: 35, carbs: 25 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#FDEBD0"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#E67E22">淚痕清爽餐</text></svg>')}`, ingredients: [ { name: "鴨肉", percentage: 0.50, note: "使用低致敏性的新穎蛋白，有助於減少因食物不耐引起的全身性發炎，進而改善淚液過度分泌。", allergen_id: 'duck' }, { name: "薏仁", percentage: 0.20, note: "在中醫食療中有利水滲濕、健脾的功用，有助於改善體內濕氣過重可能導致的眼部分泌物問題。", allergen_id: 'grain' }, { name: "藍莓", percentage: 0.10, note: "富含花青素，是強效抗氧化劑，有助於保護眼部微血管健康，維持眼部循環。" }, { name: "枸杞", percentage: 0.05, note: "富含葉黃素、玉米黃素和多醣體，是傳統的護眼食材，有助於保護視網膜。" }, { name: "節瓜", percentage: 0.15, note: "高含水、低熱量，有助於補充水分，同時其纖維有助於維持腸道健康，減少毒素累積。" } ] },
+            eye_health_recipe: { id: 'eye_health_recipe', name: "明眸亮眼鮭魚餐", primaryTarget: "眼睛保健", description: "專為守護靈魂之窗設計，富含葉黃素、玉米黃素與Omega-3，從內而外滋養眼部健康。", caloriesPerGram: 1.25, tags: ['eye_health', 'senior'], macros: { protein: 35, fat: 45, carbs: 20 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#85C1E9"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">明眸亮眼餐</text></svg>')}`, ingredients: [ { name: "鮭魚", percentage: 0.40, note: "Omega-3脂肪酸中的DHA是構成視網膜感光細胞的重要成分，對維持視力清晰至關重要。", allergen_id: 'fish' }, { name: "雞蛋 (含蛋黃)", percentage: 0.15, note: "蛋黃是葉黃素和玉米黃素的極佳生物利用來源，這兩種營養素能過濾藍光、保護視網膜黃斑部。", allergen_id: 'egg' }, { name: "胡蘿蔔", percentage: 0.15, note: "提供豐富的β-胡蘿蔔素，可在體內轉化為維生素A，維生素A是維持正常視力(特別是夜視)的必需品。" }, { name: "南瓜", percentage: 0.15, note: "同樣富含β-胡蘿蔔素、葉黃素和玉米黃素，為眼睛提供多重抗氧化保護。" }, { name: "枸杞", percentage: 0.05, note: "富含枸杞多醣與玉米黃素，傳統上用於滋補肝腎、明目，有助於對抗眼睛的氧化壓力。" }, { name: "藍莓", percentage: 0.10, note: "花青素含量極高，有助於促進眼部血液循環，增強微血管韌性，緩解眼睛疲勞。" } ] },
+            venison_recipe: { id: 'venison_recipe', name: "頂級低敏鹿肉餐", primaryTarget: "極度敏感肌膚/腸胃", description: "採用極低敏的鹿肉作為單一新穎蛋白，專為需要避開常見過敏原的狗狗設計。", caloriesPerGram: 1.3, tags: ['skin', 'gi_health', 'general'], macros: { protein: 40, fat: 38, carbs: 22 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#A93226"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">頂級鹿肉餐</text></svg>')}`, ingredients: [ { name: "鹿肉", percentage: 0.55, note: "極少見的動物蛋白來源，可作為食物排除試驗的理想選擇，大幅降低食物過敏或不耐的風險。", allergen_id: 'venison' }, { name: "南瓜", percentage: 0.20, note: "溫和的纖維來源，有助於穩定腸道功能，其β-胡蘿蔔素亦有助於皮膚健康。" }, { name: "菠菜", percentage: 0.10, note: "提供豐富的鐵質、維生素K和葉酸，有助於維持整體健康，但腎臟問題犬隻需注意份量。" }, { name: "藍莓", percentage: 0.10, note: "強效的抗氧化劑來源，有助於中和體內自由基，降低因過敏引起的發炎反應。" }, { name: "奇亞籽", percentage: 0.05, note: "提供植物性Omega-3 (ALA)與水溶性纖維，有助於滋潤皮膚並促進腸道健康。" } ] },
+            lamb_oat_recipe: { id: 'lamb_oat_recipe', name: "舒敏護膚羊肉燕麥粥", primaryTarget: "皮膚敏感 / 腸胃溫和", description: "採用溫性的羊肉作為低敏蛋白，搭配燕麥與亞麻籽油，溫和調理敏感的皮膚與腸胃。", caloriesPerGram: 1.25, tags: ['skin', 'gi_health'], macros: { protein: 35, fat: 40, carbs: 25 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#EAEAEA"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555">舒敏羊肉餐</text></svg>')}`, ingredients: [ { name: "羊肉", percentage: 0.50, note: "一種溫性且較不易致敏的新穎蛋白質，富含肉鹼與鋅，有助於能量代謝與皮膚修復。", allergen_id: 'lamb' }, { name: "燕麥", percentage: 0.20, note: "富含水溶性纖維β-葡聚醣，有助於穩定血糖，其天然成分能舒緩皮膚不適。", allergen_id: 'grain' }, { name: "南瓜", percentage: 0.15, note: "提供可溶性與不可溶性纖維，幫助調節腸道菌叢生態，穩定糞便狀態。" }, { name: "菠菜", percentage: 0.10, note: "富含鐵、葉酸與維生素K，是營養密集的綠色蔬菜，有助於整體健康。" }, { name: "亞麻籽油", percentage: 0.05, note: "植物性Omega-3 (ALA) 的優質來源，經體內轉化有助於抗發炎，改善皮膚狀況。" } ] },
+            beef_power_recipe: { id: 'beef_power_recipe', name: "高能量活力牛肉餐", primaryTarget: "高活動量 / 增肌需求", description: "為好動的狗狗設計的能量推進器，提供高生物價值的蛋白質與複合碳水，支持肌肉發展與體力恢復。", caloriesPerGram: 1.35, tags: ['performance', 'puppy'], macros: { protein: 40, fat: 35, carbs: 25 }, imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#C0392B"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">高能牛肉餐</text></svg>')}`, ingredients: [ { name: "牛肉 (瘦)", percentage: 0.45, note: "富含肌酸、鐵和鋅，是建構強壯肌肉、提升運動表現和耐力的關鍵蛋白質來源。", allergen_id: 'beef' }, { name: "牛心", percentage: 0.10, note: "天然的牛磺酸與輔酶Q10寶庫，對於心肌功能和能量轉換至關重要。", allergen_id: 'beef' }, { name: "地瓜", percentage: 0.20, note: "提供緩慢釋放能量的複合碳水化合物，為長時間的活動提供穩定續航力。" }, { name: "藜麥", percentage: 0.15, note: "提供完整植物性胺基酸的無麩質穀物，有助於肌肉的修復與生長。", allergen_id: 'grain' }, { name: "青花菜", percentage: 0.10, note: "富含維生素C和K，以及抗氧化物蘿蔔硫素，有助於支持骨骼健康與對抗運動後的氧化壓力。" } ] },
+            plant_based_recipe: { id: 'plant_based_recipe', name: "蔬食活力鷹嘴豆餐", primaryTarget: "蛋白質輪替 / 特殊飲食需求", description: "一款精心設計的植物性飲食選擇，適合需要暫時避開所有動物蛋白的特殊情況。", caloriesPerGram: 1.1, tags: ['general'], macros: { protein: 25, fat: 30, carbs: 45 }, specialNote: "注意：此為專業進階食譜，不建議長期作為唯一主食，除非在獸醫或寵物營養師的嚴格監督與指導下，並搭配特定的胺基酸與維生素補充品(如L-肉鹼、牛磺酸、B12)。", imageUrl: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60"><rect width="120" height="60" fill="#2ECC71"/><text x="60" y="35" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">蔬食活力餐</text></svg>')}`, ingredients: [ { name: "鷹嘴豆", percentage: 0.25, note: "優質的植物蛋白與纖維來源，提供飽足感與穩定能量。" }, { name: "板豆腐 (非基因改造)", percentage: 0.25, note: "易於消化的植物蛋白，質地柔軟，是建構身體組織的基礎。" }, { name: "扁豆", percentage: 0.15, note: "富含蛋白質、鐵質與葉酸，是營養密度非常高的豆類。" }, { name: "藜麥", percentage: 0.15, note: "少數提供所有必需胺基酸的植物，是確保蛋白質完整的關鍵。", allergen_id: 'grain' }, { name: "營養酵母", percentage: 0.05, note: "提供天然的維生素B群與類似起司的鮮味，能大幅提升適口性。" }, { name: "胡蘿蔔", percentage: 0.10, note: "提供β-胡蘿蔔素，作為抗氧化劑並在體內轉化為維生素A。" }, { name: "菠菜", percentage: 0.05, note: "提供鐵質與多種維生素，增加食譜的營養多樣性。" } ] }
+        };
+        const snackData = {
+            'dental_stick_s': { name: '潔牙骨 (小)', calories: 50, unit: '根' },
+            'dental_stick_m': { name: '潔牙骨 (中)', calories: 90, unit: '根' },
+            'jerky_chicken': { name: '雞肉乾', calories: 3.5, unit: '克' },
+            'jerky_beef': { name: '牛肉乾', calories: 4.0, unit: '克' },
+            'biscuit_s': { name: '小饅頭/餅乾', calories: 5, unit: '顆' },
+            'freeze_dried_liver': { name: '凍乾雞肝', calories: 5.5, unit: '克' }
+        };
+        // --- UPDATED: Added 'rabbit' to the allergen list ---
+        const ALLERGENS = { chicken: '雞肉', duck: '鴨肉', turkey: '火雞肉', beef: '牛肉', venison: '鹿肉', lamb: '羊肉', rabbit: '兔肉', fish: '魚肉', egg: '雞蛋', grain: '穀物' };
+        
+        const myProducts = {
+            'fd_chicken': { id: 'fd_chicken', name: '頂級凍乾雞肉鬆', description: '100%純天然雞胸肉製成，補充優質蛋白的最佳選擇。', price: 280, image_url: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#FAD7A0"/><text x="50" y="55" font-family="Arial" font-size="12" text-anchor="middle" fill="#D35400">雞肉鬆</text></svg>')}` },
+            'fd_duck': { id: 'fd_duck', name: '低敏凍乾鴨肉塊', description: '嚴選櫻桃鴨，新穎蛋白來源，適合易敏體質。', price: 320, image_url: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#F5B041"/><text x="50" y="55" font-family="Arial" font-size="12" text-anchor="middle" fill="#A0522D">鴨肉塊</text></svg>')}` },
+            'fd_venison': { id: 'fd_venison', name: '紐西蘭凍乾鹿肉片', description: '極致低敏，來自純淨紐西蘭的草飼鹿，營養豐富。', price: 450, image_url: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#C0392B"/><text x="50" y="55" font-family="Arial" font-size="12" text-anchor="middle" fill="white">鹿肉片</text></svg>')}` },
+            'fd_fish': { id: 'fd_fish', name: '冰島鱈魚凍乾丁', description: '富含Omega-3，幫助皮膚亮毛，是狗狗的最愛。', price: 350, image_url: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#5DADE2"/><text x="50" y="55" font-family="Arial" font-size="12" text-anchor="middle" fill="white">鱈魚丁</text></svg>')}` },
+            'fd_lamb': { id: 'fd_lamb', name: '澳洲凍乾羊肉塊', description: '溫性低敏羊肉，適合腸胃及皮膚敏感的狗狗。', price: 380, image_url: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#EAEAEA"/><text x="50" y="55" font-family="Arial" font-size="12" text-anchor="middle" fill="#555">羊肉塊</text></svg>')}` },
+            'fd_beef': { id: 'fd_beef', name: '草飼牛凍乾肉片', description: '高能量高蛋白，是好動狗狗的最佳體力補充。', price: 360, image_url: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#E74C3C"/><text x="50" y="55" font-family="Arial" font-size="12" text-anchor="middle" fill="white">牛肉片</text></svg>')}` },
+            'sup_gl': { id: 'sup_gl', name: 'pp pawfact 關節素', description: '高純度綠唇貝粉，維持關節靈活，步步穩健。', price: 550, image_url: `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#2ECC71"/><text x="50" y="55" font-family="Arial" font-size="12" text-anchor="middle" fill="white">關節素</text></svg>')}` }
+        };
 
-    // === POP-UP LOGIN MODAL ===
-    function showLoginModal(formData) {
-      const modal = document.createElement('div');
-      modal.id = 'login-modal';
-      modal.innerHTML = `
-        <div style="background:white;padding:30px;border-radius:12px;width:90%;max-width:400px;text-align:center;">
-          <h2>Log In to See Recipe</h2>
-          <input id="modal-email" placeholder="Email" style="width:100%;margin:10px 0;padding:10px;border:1px solid #ccc;border-radius:6px;">
-          <input id="modal-pass" type="password" placeholder="Password" style="width:100%;margin:10px 0;padding:10px;border:1px solid #ccc;border-radius:6px;">
-          <button id="modal-signup" style="margin:5px;padding:10px 20px;background:#00695c;color:white;border:none;border-radius:6px;">Sign Up</button>
-          <button id="modal-login" style="margin:5px;padding:10px 20px;background:#00897b;color:white;border:none;border-radius:6px;">Log In</button>
-          <p id="modal-msg" style="color:red;margin-top:10px;"></p>
-        </div>`;
-      document.body.appendChild(modal);
+        // --- DOM Element References ---
+        const formElements = {
+            healthIssue: document.getElementById('health-issue'), recipeChoice: document.getElementById('recipe-choice'), allergenFilter: document.getElementById('allergen-filter'), recipeWarning: document.getElementById('recipe-warning'), dogName: document.getElementById('dog-name'), dogAge: document.getElementById('dog-age'), dogWeight: document.getElementById('dog-weight'), activityLevel: document.getElementById('activity-level'), neutered: (val) => document.querySelector(`input[name="neutered"][value="${val}"]`), mealsPerDay: document.getElementById('meals-per-day'), form: document.getElementById('dog-form')
+        };
+        const profileManager = document.getElementById('profile-manager');
+        const profileElements = {
+            select: document.getElementById('profile-select'), saveBtn: document.getElementById('save-profile-btn'), message: document.getElementById('profile-message')
+        };
+        const snackElements = {
+            select: document.getElementById('snack-select'), quantity: document.getElementById('snack-quantity'), unit: document.getElementById('snack-unit'), calculateBtn: document.getElementById('calculate-snack-btn'), result: document.getElementById('snack-result')
+        };
+        const rotationList = document.getElementById('rotation-list');
+        const sourcesToggleBtn = document.getElementById('toggle-sources-btn');
+        const sourcesContent = document.getElementById('sources-content');
+        
+        const shoppingListIcon = document.getElementById('shopping-list-icon');
+        const shoppingListBadge = document.getElementById('shopping-list-badge');
+        const shoppingListModal = document.getElementById('shopping-list-modal');
+        const listModalCloseBtn = document.getElementById('list-modal-close-btn');
+        const listModalBody = document.getElementById('list-modal-body');
+        const listTotalPrice = document.getElementById('list-total-price');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const emptyListMsg = document.getElementById('empty-list-msg');
+        const emailCaptureForm = document.getElementById('email-capture-form');
 
-      document.getElementById('modal-signup').onclick = () => {
-        const email = document.getElementById('modal-email').value;
-        const pass = document.getElementById('modal-pass').value;
-        auth.createUserWithEmailAndPassword(email, pass)
-          .then(u => { localStorage.setItem('uid', u.user.uid); modal.remove(); handleFormSubmitAfterLogin(formData); })
-          .catch(e => document.getElementById('modal-msg').textContent = e.message);
-      };
+        let currentDER = 0;
+        let storageAvailable = false;
+        let shoppingList = [];
 
-      document.getElementById('modal-login').onclick = () => {
-        const email = document.getElementById('modal-email').value;
-        const pass = document.getElementById('modal-pass').value;
-        auth.signInWithEmailAndPassword(email, pass)
-          .then(u => { localStorage.setItem('uid', u.user.uid); modal.remove(); handleFormSubmitAfterLogin(formData); })
-          .catch(e => document.getElementById('modal-msg').textContent = e.message);
-      };
-    }
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            storageAvailable = isLocalStorageAvailable();
+            if (storageAvailable) {
+                loadProfiles();
+                profileElements.saveBtn.addEventListener('click', saveProfile);
+                profileElements.select.addEventListener('change', loadSelectedProfile);
+            } else {
+                profileManager.style.display = 'none';
+                console.warn('localStorage is not available. Dog profile feature is disabled.');
+            }
+            for (const key in ALLERGENS) {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox'; checkbox.name = 'allergen'; checkbox.value = key;
+                checkbox.addEventListener('change', updateRecipeOptions);
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(` ${ALLERGENS[key]}`));
+                formElements.allergenFilter.appendChild(label);
+            }
+            for (const key in snackData) {
+                const option = document.createElement('option');
+                option.value = key; option.textContent = snackData[key].name;
+                snackElements.select.appendChild(option);
+            }
+            
+            formElements.healthIssue.addEventListener('change', updateRecipeOptions);
+            formElements.form.addEventListener('submit', handleFormSubmit);
+            document.getElementById('calculate-batch-btn').addEventListener('click', calculateBatch);
+            
+            snackElements.select.addEventListener('change', updateSnackUnit);
+            snackElements.calculateBtn.addEventListener('click', calculateSnacks);
+            sourcesToggleBtn.addEventListener('click', () => sourcesContent.classList.toggle('show'));
+            
+            shoppingListIcon.addEventListener('click', () => shoppingListModal.classList.add('show'));
+            listModalCloseBtn.addEventListener('click', () => shoppingListModal.classList.remove('show'));
+            shoppingListModal.addEventListener('click', (e) => { if (e.target === shoppingListModal) shoppingListModal.classList.remove('show'); });
+            checkoutBtn.addEventListener('click', handleCheckout);
+            listModalBody.addEventListener('click', handleListAction);
+            emailCaptureForm.addEventListener('submit', handleEmailSubmit);
 
-    function handleFormSubmitAfterLogin(formData) {
-      const uid = localStorage.getItem('uid');
-      db.collection('users').doc(uid).get().then(doc => {
-        if (doc.exists && doc.data().paid) {
-          showRecipeResults(formData);
-        } else {
-          const priceId = 'price_1SKbFNAMwnOW8DvN8M7ywBC1';
-          fetch('https://pprecipe-backend.james-li-241.workers.dev/create-checkout-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ priceId, userId: uid })
-          })
-          .then(r => r.json())
-          .then(data => window.location.href = data.url);
+            updateSnackUnit();
+        });
+
+        // --- FEATURE DETECTION ---
+        function isLocalStorageAvailable() {
+            try {
+                const test = '__storage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (e) {
+                return false;
+            }
         }
-      });
-    }
 
-    // === MAIN FORM SUBMIT ===
-    async function handleFormSubmit(event) {
-      event.preventDefault();
-
-      const formData = {
-        recipeId: formElements.recipeChoice.value,
-        dogName: formElements.dogName.value,
-        dogWeight: parseFloat(formElements.dogWeight.value),
-        activityLevel: parseFloat(formElements.activityLevel.value),
-        mealsPerDay: parseInt(formElements.mealsPerDay.value)
-      };
-
-      if (!formData.recipeId || !formData.dogName || isNaN(formData.dogWeight)) {
-        alert('Please fill all fields!');
-        return;
-      }
-
-      const uid = localStorage.getItem('uid');
-      if (!uid) {
-        showLoginModal(formData);
-        return;
-      }
-
-      try {
-        const userDoc = await db.collection('users').doc(uid).get();
-        if (userDoc.exists && userDoc.data().paid) {
-          showRecipeResults(formData);
-          return;
+        // --- PROFILE MANAGEMENT ---
+        function saveProfile() {
+            if (!storageAvailable) return;
+            const dogName = formElements.dogName.value.trim();
+            if (!dogName) { alert('請先輸入狗狗的名字再儲存！'); return; }
+            const profileData = { name: dogName, age: formElements.dogAge.value, weight: formElements.dogWeight.value, activity: formElements.activityLevel.value, neutered: document.querySelector('input[name="neutered"]:checked').value, meals: formElements.mealsPerDay.value };
+            let profiles = JSON.parse(localStorage.getItem('dogProfiles')) || {};
+            profiles[dogName] = profileData;
+            localStorage.setItem('dogProfiles', JSON.stringify(profiles));
+            profileElements.message.textContent = `已儲存/更新 ${dogName} 的檔案！`;
+            setTimeout(() => { profileElements.message.textContent = ''; }, 3000);
+            loadProfiles();
+            profileElements.select.value = dogName;
         }
-      } catch (error) {
-        console.error("Firestore error:", error);
-      }
 
-      const priceId = 'price_1SKbFNAMwnOW8DvN8M7ywBC1';
-      const response = await fetch('https://pprecipe-backend.james-li-241.workers.dev/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, userId: uid })
-      });
-      const { url } = await response.json();
-      window.location.href = url;
-    }
+        function loadProfiles() {
+            if (!storageAvailable) return;
+            let profiles = JSON.parse(localStorage.getItem('dogProfiles')) || {};
+            profileElements.select.innerHTML = '<option value="">-- 載入已存檔的狗狗 --</option>';
+            for (const name in profiles) {
+                const option = document.createElement('option');
+                option.value = name; option.textContent = name;
+                profileElements.select.appendChild(option);
+            }
+        }
 
-    function showRecipeResults(formData) {
-      const selectedRecipe = recipes[formData.recipeId];
-      const RER = 70 * Math.pow(formData.dogWeight, 0.75);
-      const DER = RER * formData.activityLevel;
-      const dailyFoodWeight = DER / selectedRecipe.caloriesPerGram;
+        function loadSelectedProfile() {
+            if (!storageAvailable) return;
+            const selectedName = profileElements.select.value;
+            if (!selectedName) return;
+            let profiles = JSON.parse(localStorage.getItem('dogProfiles')) || {};
+            const profile = profiles[selectedName];
+            if (profile) {
+                formElements.dogName.value = profile.name; formElements.dogAge.value = profile.age; formElements.dogWeight.value = profile.weight; formElements.activityLevel.value = profile.activity; formElements.neutered(profile.neutered).checked = true; formElements.mealsPerDay.value = profile.meals;
+                profileElements.message.textContent = `已載入 ${profile.name} 的檔案。`;
+                setTimeout(() => { profileElements.message.textContent = ''; }, 3000);
+            }
+        }
 
-      updateResultsUI(DER, dailyFoodWeight, formData, selectedRecipe);
-      document.getElementById('result-section').style.display = 'block';
-      document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
-    }
+        // --- DYNAMIC FORM LOGIC ---
+        function updateRecipeOptions() {
+            const selectedTag = formElements.healthIssue.value;
+            const selectedAllergens = Array.from(formElements.allergenFilter.querySelectorAll('input:checked')).map(cb => cb.value);
+            formElements.recipeChoice.innerHTML = '<option value="" disabled selected>-- 請選擇推薦的食譜 --</option>';
+            formElements.recipeWarning.textContent = '';
+            if (!selectedTag) { formElements.recipeChoice.disabled = true; return; }
+            let availableRecipes = 0;
+            for (const recipeId in recipes) {
+                const recipe = recipes[recipeId];
+                const hasTag = recipe.tags.includes(selectedTag);
+                const hasAllergen = recipe.ingredients.some(ingredient => ingredient.allergen_id && selectedAllergens.includes(ingredient.allergen_id));
+                if (hasTag && !hasAllergen) {
+                    const option = document.createElement('option');
+                    option.value = recipeId; option.textContent = recipe.name;
+                    formElements.recipeChoice.appendChild(option);
+                    availableRecipes++;
+                }
+            }
+            if (availableRecipes === 0) {
+                formElements.recipeChoice.innerHTML = '<option value="" disabled selected>-- 無符合條件的食譜 --</option>';
+                formElements.recipeWarning.textContent = '⚠️ 找不到符合條件的食譜，請嘗試減少勾選的過敏原。';
+            }
+            formElements.recipeChoice.disabled = false;
+        }
 
-    // === YOUR ORIGINAL JS BELOW ===
-    // Paste your full recipes object, formElements, updateResultsUI, etc. here
-    // It must include:
-    // const recipes = { ... }
-    // const formElements = { ... }
-    // form.addEventListener('submit', handleFormSubmit);
+        // --- MAIN CALCULATION LOGIC ---
+        function handleFormSubmit(event) {
+            if(event) event.preventDefault();
+            const formData = {
+                recipeId: formElements.recipeChoice.value, dogName: formElements.dogName.value, dogWeight: parseFloat(formElements.dogWeight.value), activityLevel: parseFloat(formElements.activityLevel.value), mealsPerDay: parseInt(formElements.mealsPerDay.value)
+            };
+            if (!formData.recipeId) { alert('請先選擇一份食譜。如果列表為空，請調整您的健康目標或過敏原選項。'); return; }
+            if (!formData.dogName || isNaN(formData.dogWeight) || formData.dogWeight <= 0) { alert('請完整填寫狗狗的資訊，並確保體重和年齡為有效數字。'); return; }
+            const selectedRecipe = recipes[formData.recipeId];
+            const RER = 70 * Math.pow(formData.dogWeight, 0.75);
+            const derMultiplier = formData.activityLevel;
+            currentDER = RER * derMultiplier;
+            const dailyFoodWeight = currentDER / selectedRecipe.caloriesPerGram;
+            updateResultsUI(currentDER, dailyFoodWeight, formData, selectedRecipe);
+            document.getElementById('result-section').style.display = 'block';
+            if(event) {
+                document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // --- UI UPDATE & NEW FEATURE FUNCTIONS ---
+        function updateResultsUI(DER, dailyFoodWeight, formData, recipe) {
+            const recipeImage = document.getElementById('recipe-image');
+            recipeImage.src = recipe.imageUrl;
+            recipeImage.alt = recipe.name;
 
-  </script>
-</body>
+            document.getElementById('recipe-title').textContent = `為 ${formData.dogName} 設計的『${recipe.name}』`;
+            document.getElementById('recipe-target-issue').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> <strong>主要針對：</strong>${recipe.primaryTarget}`;
+            document.getElementById('recipe-subtitle').textContent = recipe.description;
+
+            const specialNoteEl = document.getElementById('recipe-special-note');
+            if (recipe.specialNote) {
+                specialNoteEl.innerHTML = recipe.specialNote; // Use innerHTML to render any HTML tags
+                specialNoteEl.style.display = 'block';
+            } else {
+                specialNoteEl.style.display = 'none';
+            }
+            
+            document.getElementById('daily-calories').textContent = `${Math.round(DER)} kcal`;
+            document.getElementById('daily-food-weight').textContent = `${Math.round(dailyFoodWeight)} g`;
+            document.getElementById('meal-portion').textContent = `${Math.round(dailyFoodWeight / formData.mealsPerDay)} g`;
+            
+            const macros = recipe.macros;
+            const proteinPct = macros.protein;
+            const fatPct = macros.fat;
+            const carbPct = macros.carbs;
+            const pieChart = document.getElementById('macro-pie-chart');
+            const legend = document.getElementById('macro-pie-legend');
+            
+            pieChart.style.background = `conic-gradient(
+                var(--protein-color) 0% ${proteinPct}%, 
+                var(--fat-color) ${proteinPct}% ${proteinPct + fatPct}%, 
+                var(--carb-color) ${proteinPct + fatPct}% 100%
+            )`;
+            
+            legend.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--protein-color);"></div>
+                    <div class="legend-label">蛋白質</div>
+                    <div class="legend-value">
+                        ${proteinPct}%<br>
+                        <span class="legend-grams">≈ ${((DER * proteinPct / 100) / 4).toFixed(1)} g</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--fat-color);"></div>
+                    <div class="legend-label">脂肪</div>
+                    <div class="legend-value">
+                        ${fatPct}%<br>
+                        <span class="legend-grams">≈ ${((DER * fatPct / 100) / 9).toFixed(1)} g</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: var(--carb-color);"></div>
+                    <div class="legend-label">碳水化合物</div>
+                    <div class="legend-value">
+                        ${carbPct}%<br>
+                        <span class="legend-grams">≈ ${((DER * carbPct / 100) / 4).toFixed(1)} g</span>
+                    </div>
+                </div>
+            `;
+
+            const ingredientsTbody = document.querySelector('#ingredients-table tbody');
+            ingredientsTbody.innerHTML = '';
+            recipe.ingredients.forEach(ing => {
+                const weight = dailyFoodWeight * ing.percentage;
+                ingredientsTbody.innerHTML += `<tr><td data-label="食材">${ing.name}</td><td data-label="份量">${weight.toFixed(1)} g</td><td data-label="功效">${ing.note}</td></tr>`;
+            });
+            
+            document.getElementById('purchase-dog-name').textContent = formData.dogName;
+            populatePurchaseSuggestion(recipe);
+            populateComboRecommendation(recipe);
+            
+            updateSupplementsTable(DER, formData.dogWeight, recipe);
+            document.getElementById('batch-result').innerHTML = '';
+            snackElements.result.innerHTML = '';
+            populateRotationSuggestions(recipe.id);
+        }
+
+        // --- Purchase Suggestion & Shopping List Logic ---
+        function createPurchaseCard(product, recommendedQty = 1) {
+            return `
+                <div class="purchase-card" data-product-id="${product.id}">
+                    <img src="${product.image_url}" alt="${product.name}" class="purchase-image">
+                    <div class="purchase-details">
+                        <h4>${product.name}</h4>
+                        <p class="desc">${product.description}</p>
+                        <div class="purchase-controls">
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" data-action="minus">-</button>
+                                <span class="quantity">${recommendedQty}</span>
+                                <button class="quantity-btn" data-action="plus">+</button>
+                            </div>
+                            <span>包，總計:</span>
+                            <span class="total-price">NT$ ${recommendedQty * product.price}</span>
+                            <button class="add-to-list-btn">加入採購清單</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function populatePurchaseSuggestion(recipe) {
+            const container = document.getElementById('purchase-suggestion-content');
+            const mainProteinIngredient = recipe.ingredients.find(ing => ing.allergen_id && (myProducts[`fd_${ing.allergen_id}`]));
+            if (!mainProteinIngredient) { container.innerHTML = '<p>這份食譜沒有明確的單一肉類蛋白，暫無特別推薦的零食。</p>'; return; }
+            
+            const recommendedProductId = `fd_${mainProteinIngredient.allergen_id}`;
+            const recommendedProduct = myProducts[recommendedProductId];
+            if (!recommendedProduct) { container.innerHTML = '<p>目前沒有可推薦的零食產品。</p>'; return; }
+            
+            const purchaseDays = 7;
+            const totalSnackCaloriesBudget = currentDER * 0.1 * purchaseDays;
+            const productPackCalories = (recommendedProduct.calories_per_gram || 4.0) * (recommendedProduct.pack_weight_g || 50);
+            let recommendedPacks = Math.ceil(totalSnackCaloriesBudget / productPackCalories);
+            if (recommendedPacks === 0) recommendedPacks = 1;
+            
+            container.innerHTML = createPurchaseCard(recommendedProduct, recommendedPacks);
+        }
+
+        function populateComboRecommendation(recipe) {
+            const container = document.getElementById('combo-recommendation-content');
+            container.innerHTML = '';
+            if (!recipe.recommendedSupplements || recipe.recommendedSupplements.length === 0) {
+                return;
+            }
+            
+            let comboHTML = `<div class="combo-recommendation-section"><h4>黃金搭檔加購推薦</h4>`;
+            recipe.recommendedSupplements.forEach(productId => {
+                const product = myProducts[productId];
+                if (product) {
+                    comboHTML += createPurchaseCard(product);
+                }
+            });
+            comboHTML += `</div>`;
+            container.innerHTML = comboHTML;
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.add-to-list-btn')) {
+                const card = e.target.closest('.purchase-card');
+                if (!card) return;
+                const productId = card.dataset.productId;
+                const qty = parseInt(card.querySelector('.quantity').textContent);
+                addToShoppingList(productId, qty);
+            } else if (e.target.matches('.quantity-btn')) {
+                const card = e.target.closest('.purchase-card');
+                if (!card) return;
+                const productId = card.dataset.productId;
+                const product = myProducts[productId];
+                if (!product) return;
+                const action = e.target.dataset.action;
+                const quantitySpan = card.querySelector('.quantity');
+                const priceSpan = card.querySelector('.total-price');
+                let qty = parseInt(quantitySpan.textContent);
+                if (action === 'plus') qty++;
+                if (action === 'minus' && qty > 1) qty--;
+                quantitySpan.textContent = qty;
+                priceSpan.textContent = `NT$ ${qty * product.price}`;
+            }
+        });
+
+        function addToShoppingList(productId, quantity) {
+            const product = myProducts[productId];
+            if (!product) return;
+            const existingItem = shoppingList.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                shoppingList.push({ id: productId, name: product.name, price: product.price, quantity: quantity });
+            }
+            renderShoppingList();
+            shoppingListModal.classList.add('show');
+        }
+
+        function renderShoppingList() {
+            if (shoppingList.length === 0) {
+                listModalBody.innerHTML = '';
+                emptyListMsg.style.display = 'block';
+            } else {
+                emptyListMsg.style.display = 'none';
+                listModalBody.innerHTML = shoppingList.map(item => `
+                    <div class="list-item" data-id="${item.id}">
+                        <div class="list-item-name">${item.name}</div>
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" data-action="minus">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" data-action="plus">+</button>
+                        </div>
+                        <div class="list-item-price">NT$ ${item.price * item.quantity}</div>
+                        <button class="list-item-remove" data-action="remove">移除</button>
+                    </div>
+                `).join('');
+            }
+            const total = shoppingList.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            listTotalPrice.textContent = `總計: NT$ ${total}`;
+            const totalItems = shoppingList.reduce((sum, item) => sum + item.quantity, 0);
+            shoppingListBadge.textContent = totalItems;
+            shoppingListBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+        }
+
+        function handleListAction(e) {
+            if (!e.target.dataset.action) return;
+            const action = e.target.dataset.action;
+            const listItem = e.target.closest('.list-item');
+            if (!listItem) return;
+            const productId = listItem.dataset.id;
+            const itemIndex = shoppingList.findIndex(item => item.id === productId);
+            if (itemIndex === -1) return;
+
+            if (action === 'plus') {
+                shoppingList[itemIndex].quantity++;
+            } else if (action === 'minus') {
+                if (shoppingList[itemIndex].quantity > 1) {
+                    shoppingList[itemIndex].quantity--;
+                } else {
+                    shoppingList.splice(itemIndex, 1);
+                }
+            } else if (action === 'remove') {
+                shoppingList.splice(itemIndex, 1);
+            }
+            renderShoppingList();
+        }
+
+        function handleCheckout() {
+            if (shoppingList.length === 0) {
+                alert('您的採購清單是空的！');
+                return;
+            }
+            const total = shoppingList.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            alert(`感謝您透過 pp pawfact 訂購！\n總金額為 NT$ ${total}\n(此為模擬結帳，您可以將此處改為跳轉至您的購物網站)`);
+            shoppingList = [];
+            renderShoppingList();
+            shoppingListModal.classList.remove('show');
+        }
+
+        function handleEmailSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('email-input').value;
+            if(email) {
+                alert(`感謝您的訂閱！\n專屬計畫將會寄送到：${email}\n(此為模擬功能，未來可對接後端 Email 服務)`);
+                document.getElementById('email-input').value = '';
+            }
+        }
+
+        function updateSnackUnit() {
+            const selectedSnackKey = snackElements.select.value;
+            snackElements.unit.textContent = snackData[selectedSnackKey].unit;
+        }
+
+        function calculateSnacks() {
+            if (currentDER === 0) { snackElements.result.innerHTML = `<span class="danger">請先產生一份主食譜，才能評估零食影響！</span>`; return; }
+            const snackKey = snackElements.select.value;
+            const quantity = parseFloat(snackElements.quantity.value);
+            const snack = snackData[snackKey];
+            if (isNaN(quantity) || quantity <= 0) { snackElements.result.innerHTML = `<span class="danger">請輸入有效的零食數量。</span>`; return; }
+            const snackCalories = snack.calories * quantity;
+            const percentage = (snackCalories / currentDER) * 100;
+            const recommendedLimit = currentDER * 0.1;
+            let resultHTML = `這份零食約 <strong>${snackCalories.toFixed(0)} kcal</strong>，佔每日總熱量需求的 <strong>${percentage.toFixed(1)}%</strong>。`;
+            if (percentage > 10) {
+                resultHTML += `<br><span class="danger">⚠️ 警告：已超過每日零食建議熱量上限 (${recommendedLimit.toFixed(0)} kcal)。請考慮減少主食份量或減少零食。</span>`;
+            } else {
+                resultHTML += `<br><span class="safe">✅ 在建議的10%範圍內，很棒的控制！</span>`;
+            }
+            snackElements.result.innerHTML = resultHTML;
+        }
+
+        function populateRotationSuggestions(currentRecipeId) {
+            rotationList.innerHTML = '';
+            const selectedTag = formElements.healthIssue.value;
+            const selectedAllergens = Array.from(formElements.allergenFilter.querySelectorAll('input:checked')).map(cb => cb.value);
+            let suggestionsCount = 0;
+            for (const recipeId in recipes) {
+                if (recipeId === currentRecipeId || suggestionsCount >= 2) continue;
+                const recipe = recipes[recipeId];
+                const hasTag = recipe.tags.includes(selectedTag);
+                const hasAllergen = recipe.ingredients.some(ingredient => ingredient.allergen_id && selectedAllergens.includes(ingredient.allergen_id));
+                if (hasTag && !hasAllergen) {
+                    const li = document.createElement('li');
+                    const button = document.createElement('button');
+                    button.innerHTML = `<strong>${recipe.name}</strong><span>${recipe.description}</span>`;
+                    button.onclick = () => {
+                        formElements.recipeChoice.value = recipeId;
+                        handleFormSubmit();
+                        document.getElementById('recipe-title').scrollIntoView({ behavior: 'smooth' });
+                    };
+                    li.appendChild(button);
+                    rotationList.appendChild(li);
+                    suggestionsCount++;
+                }
+            }
+            if (suggestionsCount === 0) {
+                rotationList.innerHTML = '<li>沒有其他符合條件的食譜可供輪替。</li>';
+            }
+        }
+        
+        function updateSupplementsTable(DER, dogWeight, recipe) {
+            const supplementsTbody = document.querySelector('#supplements-table tbody');
+            supplementsTbody.innerHTML = '';
+
+            // Hide supplements for supplementary meals
+            if (recipe.specialNote && recipe.specialNote.includes("輔助食療餐")) {
+                supplementsTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; font-weight:bold;">此為輔助食療餐，不需額外添加主食用的必需營養補充品。請確保狗狗的主食本身營養均衡。</td></tr>`;
+                return;
+            }
+
+            const requiredCalciumG = (DER / 1000) * 1.25;
+            const eggshellPowderG = requiredCalciumG / 0.37;
+            const requiredChickenNecksG = (requiredCalciumG / 1.4) * 100;
+            supplementsTbody.innerHTML += `<tr><td data-label="補充品">食品級蛋殼粉</td><td data-label="建議份量">${eggshellPowderG.toFixed(2)} g</td><td data-label="說明">提供必需的鈣質，平衡鈣磷比，保護骨骼健康。</td><td data-label="換算參考">若想透過<strong>磨碎的生雞脖</strong>補充，約需 <strong>${Math.round(requiredChickenNecksG)} 克</strong>。<span class="warning">⚠️注意：這會額外增加約 ${Math.round(requiredChickenNecksG * 2.3)} 大卡熱量，且有骨刺風險。</span></td></tr>`;
+            const requiredOmega3mg = dogWeight * 60;
+            const requiredSalmonG = (requiredOmega3mg / 1800) * 100;
+            supplementsTbody.innerHTML += `<tr><td data-label="補充品">高品質魚油</td><td data-label="建議份量">約 ${Math.round(requiredOmega3mg)} mg 的 EPA+DHA</td><td data-label="說明">抗發炎、護心、亮毛。請依您產品的濃度換算。</td><td data-label="換算參考">若想透過<strong>養殖鮭魚</strong>補充，約需 <strong>${Math.round(requiredSalmonG)} 克</strong>。<span class="warning">⚠️注意：這會額外增加約 ${Math.round(requiredSalmonG * 2.08)} 大卡熱量，並可能攝入重金屬。</span></td></tr>`;
+            if (recipe.specialSupplements && recipe.specialSupplements.includes('glucosamine')) {
+                const glucosamineMg = dogWeight * 25;
+                const requiredChickenFeetG = (glucosamineMg / 400) * 100;
+                supplementsTbody.innerHTML += `<tr><td data-label="補充品">葡萄糖胺/軟骨素</td><td data-label="建議份量">約 ${Math.round(glucosamineMg)}+ mg</td><td data-label="說明">維護關節健康，建議使用複合配方產品。</td><td data-label="換算參考">若想透過<strong>雞腳</strong>補充，約需 <strong>${Math.round(requiredChickenFeetG)} 克</strong>。<span class="warning">⚠️注意：這會額外增加約 ${Math.round(requiredChickenFeetG * 2.15)} 大卡熱量，且含量不穩定。</span></td></tr>`;
+            }
+            if (recipe.specialSupplements && recipe.specialSupplements.includes('taurine')) {
+                const taurineMg = dogWeight * 30;
+                const requiredChickenHeartG = (taurineMg / 170) * 100;
+                supplementsTbody.innerHTML += `<tr><td data-label="補充品">牛磺酸 (Taurine)</td><td data-label="建議份量">約 ${Math.round(taurineMg)}-${Math.round(taurineMg*2)} mg</td><td data-label="說明">支持心肌功能，對高齡犬和特定品種尤其重要。</td><td data-label="換算參考">若想透過<strong>雞心</strong>補充，約需 <strong>${Math.round(requiredChickenHeartG)} 克</strong>。<span class="warning">⚠️注意：這會額外增加約 ${Math.round(requiredChickenHeartG * 1.53)} 大卡熱量，且烹煮會大量流失。</span></td></tr>`;
+            }
+            supplementsTbody.innerHTML += `<tr><td data-label="補充品">犬用綜合維生素礦物質</td><td data-label="建議份量">依產品說明</td><td data-label="說明"><strong>(強烈建議)</strong> 補足自製鮮食可能缺乏的微量元素 (如鋅、碘、維生素E等)。</td><td data-label="換算參考">例如，補足鋅需大量<strong>牡蠣</strong>；補碘則需<strong>海帶</strong>。<span class="warning">⚠️注意：自行搭配極其困難且有中毒風險。這是最建議使用專業補充品的項目。</span></td></tr>`;
+        }
+        function calculateBatch() {
+            const days = parseInt(document.getElementById('batch-days').value);
+            if (isNaN(days) || days < 1) { alert('請輸入有效的天數。'); return; }
+            let ingredientsHtml = '<h4>食材總量：</h4><ul>';
+            const ingredientsRows = document.querySelectorAll('#ingredients-table tbody tr');
+            ingredientsRows.forEach(row => {
+                const name = row.cells[0].textContent;
+                const dailyWeight = parseFloat(row.cells[1].textContent);
+                ingredientsHtml += `<li><strong>${name}:</strong> ${(dailyWeight * days).toFixed(1)} g</li>`;
+            });
+            ingredientsHtml += '</ul>';
+            let supplementsHtml = '<h4>營養補充品總量：</h4><ul>';
+            const supplementsRows = document.querySelectorAll('#supplements-table tbody tr');
+            supplementsRows.forEach(row => {
+                const name = row.cells[0].textContent;
+                const dailyAmountText = row.cells[1].textContent;
+                const dailyAmount = parseFloat(dailyAmountText);
+                if (!isNaN(dailyAmount)) {
+                    supplementsHtml += `<li><strong>${name}:</strong> ${(dailyAmount * days).toFixed(2)} ${dailyAmountText.replace(/[0-9.]/g, '').trim()}</li>`;
+                } else {
+                    supplementsHtml += `<li><strong>${name}:</strong> ${dailyAmountText} (每日添加)</li>`;
+                }
+            });
+            supplementsHtml += '</ul><p><strong>保存提示：</strong>建議將每日份量分裝，冷藏可保存3天，其餘冷凍可保存1個月。</p>';
+            document.getElementById('batch-result').innerHTML = ingredientsHtml + supplementsHtml;
+        }
+
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991f48963df0e2f0',t:'MTc2MTAzNDI3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

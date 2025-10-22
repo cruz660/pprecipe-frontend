@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深度關係經營學：掌握伴侶的六大核心需求</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --header-font: 'PingFang TC', 'Microsoft JhengHei', 'Helvetica Neue', Arial, sans-serif;
+            --body-font: 'PingFang TC', 'Microsoft JhengHei', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--body-font);
+            line-height: 1.8;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .course-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        header h1 {
+            font-family: var(--header-font);
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        header p {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .course-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .course-section h2 {
+            font-family: var(--header-font);
+            font-size: 1.8em;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .course-section h3 {
+            font-family: var(--header-font);
+            font-size: 1.4em;
+            color: var(--primary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .pain-point {
+            background-color: #fffbe6;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .pain-point p {
+            margin: 0.5em 0;
+        }
+        
+        .important-reminder {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        
+        .important-reminder strong {
+            color: #b91c1c;
+        }
+
+        .needs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        details {
+            background-color: #fdfdff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        details[open] {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        summary {
+            font-size: 1.2em;
+            font-weight: 600;
+            padding: 15px 20px;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--primary-color);
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 1.5em;
+            color: var(--primary-color);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        details[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        .details-content {
+            padding: 0 20px 20px 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .details-content p {
+            margin-top: 15px;
+        }
+        
+        .details-content ul {
+            padding-left: 20px;
+            list-style-type: '✓  ';
+        }
+        
+        .details-content li {
+            margin-bottom: 10px;
+        }
+
+        .need-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .need-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .assessment-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .assessment-list li {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .assessment-list strong {
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: #888;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2em;
+            }
+            .course-section {
+                padding: 20px;
+            }
+            .course-section h2 {
+                font-size: 1.5em;
+            }
+            summary {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="course-container">
+        <header>
+            <h1>深度關係經營學</h1>
+            <p>掌握伴侶的六大核心需求</p>
+        </header>
+
+        <main>
+            <!-- Part 1: 開場 -->
+            <section class="course-section">
+                <h2>Part 1：開場 - 觸動痛點，建立連結</h2>
+                <p>Hello，歡迎嚟到我哋嘅課程。</p>
+                <p>喺開始之前，我想問你一個問題：你係咪覺得，喺感情入面，有時真係好攰？</p>
+                <div class="pain-point">
+                    <p>你可能覺得自己已經付出咗好多，為對方、為呢個家付出咗你嘅時間、心機，甚至係青春... 但唔知點解，對方好似睇唔到，甚至覺得係理所當然。</p>
+                    <p>你可能覺得，點解以前熱戀期嗰陣，大家有講唔完嘅話題，但而家，兩個人坐埋一齊，除咗傾下仔女、交費，就係各自對住部手機？嗰種親密感，好似唔見咗。</p>
+                    <p>又或者，你哋成日因為一啲雞毛蒜皮嘅小事鬧交，鬧完之後又後悔，但下一次，又會重複同樣嘅模式。你好想改變，但又充滿住一種深深嘅無力感，唔知可以點做。</p>
+                </div>
+                <p>如果你有以上任何一種感覺，我想同你講：你唔係孤單一個，呢啲都係非常普遍嘅情況。而更重要嘅係，呢啲情況，絕對唔係絕症。</p>
+                <p>問題嘅根源，往往唔係因為你哋唔再愛對方，而係因為我哋唔知道對方內心深處，真正需要嘅係乜嘢。就好似一部 iPhone，你用 Android 嘅充電線係叉唔到電嘅。<strong>你畀嘅嘢，未必係佢想要嘅嘢。</strong></p>
+                <p>今日，我就要交畀你哋一本「愛情說明書」，帶你哋去破解人類情感底層嘅密碼。呢個密碼，就係我哋今日嘅主題——<strong>「六大核心需求」</strong>。</p>
+            </section>
+
+            <!-- Part 2: 核心概念 -->
+            <section class="course-section">
+                <h2>Part 2：核心概念 - 揭示六大需求</h2>
+                <p>首先，咩係六大核心需求呢？佢哋分別係：<strong>安全感、認同感、成就感、刺激感、英雄感，同埋存在感。</strong></p>
+                <p>你可以將呢六樣嘢，想像成我哋每個人內心嘅六個「情感戶口」。當呢啲戶口嘅結餘充足嗰陣，我哋就會覺得幸福、滿足、充滿力量。但如果某個戶口長期處於赤字狀態，我哋就會覺得焦慮、空虛、冇心機。</p>
+                <p>喺一段親密關係入面，最神奇嘅地方就係：<strong>當你能夠持續為伴侶嘅呢六個戶口「增值」，佢就會喺潛意識入面認定，你，就係佢生命中最重要、最無可取代嘅人。</strong></p>
+                
+                <div class="needs-grid">
+                    <details>
+                        <summary>
+                            <div class="need-card">
+                                <svg class="need-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                <span>安全感 (Security)</span>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p><strong>比喻：關係的錨 (The Anchor)</strong></p>
+                            <p>呢個係一切關係嘅基石。就好似一隻船，如果冇一個堅實嘅錨，喺大海上面只會隨波逐流，永遠都覺得唔踏實。當一個人冇安全感，佢就會猜疑、焦慮、想控制對方，結果反而將關係推向更危險嘅境地。</p>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>
+                            <div class="need-card">
+                                <svg class="need-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                                <span>認同感 (Recognition)</span>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p><strong>比喻：對方的聚光燈 (The Spotlight)</strong></p>
+                            <p>你有冇試過，喺人群中覺得自己好似透明咁？冇人睇到你嘅努力，冇人欣賞你嘅優點？呢種感覺好難受。認同感，就係為對方打一盞聚光燈，話俾佢知：「我睇到你，我欣賞你，你喺我眼中係好叻、好特別嘅。」</p>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>
+                            <div class="need-card">
+                                <svg class="need-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                                <span>成就感 (Achievement)</span>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p><strong>比喻：翅膀下的風 (The Wind Beneath My Wings)</strong></p>
+                            <p>每個人都想成為一個更好嘅自己。成就感就係，你伴侶覺得，同你一齊之後，佢飛得更高、更遠。你唔係綁住佢嘅枷鎖，而係托住佢向上飛嘅嗰陣風。</p>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>
+                            <div class="need-card">
+                                <svg class="need-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                <span>刺激感 (Stimulation)</span>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p><strong>比喻：生活的調味料 (The Spice)</strong></p>
+                            <p>幾好食嘅餸，日日食都會厭。關係都一樣。刺激感唔一定係玩跳傘、過山車，而係生活入面嘅「新鮮感」同「未知感」，令大家覺得，同對方一齊，生活永遠都唔會沉悶。</p>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>
+                            <div class="need-card">
+                                <svg class="need-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                <span>英雄感 (Heroism)</span>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p><strong>比喻：英雄的斗篷 (The Cape)</strong></p>
+                            <p>呢個需求，尤其喺男士身上會更明顯。佢哋天生就有一種想保護、想被需要嘅渴望。當佢覺得自己可以為你遮風擋雨，佢會覺得自己好似超人一樣，充滿價值。而女士們，其實都需要被另一半視為「女神」，被珍視、被呵護。</p>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>
+                            <div class="need-card">
+                                <svg class="need-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" /></svg>
+                                <span>存在感 (Presence)</span>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                             <p><strong>比喻：心中的皇座 (The Throne)</strong></p>
+                            <p>呢個係最高級別嘅需求。簡單嚟講，就係「喺你心入面，我係咪最重要嗰個？」如果佢覺得，喺你嘅世界入面，佢嘅位置永遠都排喺工作、朋友、甚至手機之後，佢嘅存在感就會極低。相反，如果你將佢放喺心中嘅皇座上，佢會覺得自己係全世界最幸福嘅人。</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+            
+            <!-- Part 3: 重要心法 -->
+            <section class="course-section">
+                <h2>Part 3：重要心法 - 委屈自己，換唔到愛</h2>
+                <div class="important-reminder">
+                    <p>我必須要同大家分享一個極之重要嘅溫馨提示。</p>
+                    <p>我今日教嘅所有工具、所有方法，佢嘅終極目的，係令你成為一個「高價值」嘅經營者，而<strong>唔係</strong>叫你去討好、去乞求對方愛你，或者降低自己嘅價值。</p>
+                    <p>我哋所有嘅行動，都必須建基於<strong>自尊、自重、自愛</strong>之上。千祈唔好因為想挽回一段感情，而委屈自己，做啲你根本唔想做嘅事，講啲你自己都唔信嘅說話。</p>
+                    <p>記住，<strong>虛偽嘅付出，對方係感覺到嘅，而且只會帶嚟反效果。</strong>只有發自內心嘅真誠，先至係最強大嘅力量。</p>
+                </div>
+            </section>
+
+            <!-- Part 4: 實戰演練 -->
+            <section class="course-section">
+                <h2>Part 4：實戰演練 - 評估你的關係健康度</h2>
+                <p>好，心態調整好之後，我哋就嚟做一個實戰演練。請準備好紙同筆，為你哋關係入面嘅六大需求評分 (0分 = 完全冇，10分 = 極之滿足)。</p>
+                <ol class="assessment-list">
+                    <li><strong>安全感：</strong>你嘅伴侶會唔會覺得同你一齊冇安全感？例如：你唔表達自己內心嘅諗法，或者你哋嘅未來冇清晰嘅方向？憑直覺為對方喺你身上得到嘅「安全感」評分。</li>
+                    <li><strong>認同感：</strong>你會唔會欣賞伴侶嘅優點？有冇稱讚過佢嘅付出？如果你成日否定佢，咁就係0分；如果你經常讚賞佢，咁就係10分。</li>
+                    <li><strong>成就感：</strong>你會唔會支持伴侶嘅目標同夢想？佢會唔會覺得你係佢嘅後盾？0分係完全感覺不到，10分係你一直俾到佢強烈嘅支持。</li>
+                    <li><strong>刺激感：</strong>你哋嘅相處會唔會千篇一律？係咪好沉悶？如果有新鮮感、驚喜，就係10分；如果完全冇，就係0分。</li>
+                    <li><strong>英雄感：</strong>(特別對女士) 你會唔會畀機會佢保護你？0分係佢完全覺得唔需要佢，10分係佢覺得自己係你嘅超人。</li>
+                    <li><strong>存在感：</strong>你有冇將伴侶擺喺你生命中最重要嘅位置？如果佢覺得自己係你嘅優先選擇，就係10分；如果唔係，就係0分。</li>
+                </ol>
+                <p>評分完成後，睇下有冇邊啲項目係低過5分嘅？唔緊要，見到問題，就係改變嘅開始。</p>
+            </section>
+
+            <!-- Part 5: 解決方案 -->
+            <section class="course-section">
+                <h2>Part 5：解決方案 - 如何為情感戶口增值</h2>
+                <p>評估完分數之後，我哋就知道邊啲「情感戶口」需要緊急增值。以下係針對每一個需求嘅實用建議。</p>
+                
+                <details>
+                    <summary>提升「安全感」</summary>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>溝通透明化：</strong>唔好再估估下。每日用15分鐘，分享下你今日做過啲乜，有咩開心唔開心嘅諗法。唔係匯報，係分享。</li>
+                            <li><strong>善用身體接觸：</strong>唔好睇少一個擁抱嘅力量。出門前嘅一個擁抱，臨瞓前嘅一個輕吻，行街時主動拖住佢隻手，呢啲非語言嘅溝通，比講一萬句「我愛你」更能傳遞安心。</li>
+                            <li><strong>共同規劃未來：</strong>唔使係十年大計。可以係計劃下個禮拜去邊度食飯，下個月去一次短途旅行。將「我」變成「我哋」，安全感就會大增。</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>提升「認同感」</summary>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>具體化讚美：</strong>唔好再講「你好叻」。要具體！例如：「老公，多謝你今日幫我整好部電腦，你真係叻！」</li>
+                            <li><strong>即時肯定付出：</strong>當對方有任何付出，即刻俾肯定，例如：「你真係一個好好嘅爸爸／媽媽。」</li>
+                            <li><strong>公開場合讚美：</strong>喺朋友、屋企人面前，不經意咁讚下佢。例如：「我老公整牛扒真係有一手㗎！」呢種認同感，效果會放大十倍。</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>提升「成就感」</summary>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>做佢嘅策略師，唔係評論家：</strong>當佢同你講佢嘅夢想，第一句永遠都係：「幾好喎！有冇諗過可以點樣開始？」幫佢分析，幫佢搵資料。</li>
+                            <li><strong>提供實際行動：</strong>幫佢搵資源、聯絡人脈，用行動話俾佢知，你同佢係同一隊。</li>
+                            <li><strong>慶祝小成功：</strong>佢成功簽到一張單，或者佢堅持做運動一個禮拜，都值得慶祝！同佢講：「叻仔/叻女！我為你驕傲！」</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>提升「刺激感」</summary>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>打破慣性：</strong>改變一下日常生活，例如換新髮型、試新嘅活動，甚至計劃一次特別嘅旅行。</li>
+                            <li><strong>創造小驚喜：</strong>間唔中送小禮物，或者寫張寫住「掛住你」嘅紙仔攝喺佢銀包。呢啲唔使錢嘅浪漫，最動人。</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>提升「英雄感」</summary>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>學識「示弱」：</strong>呢個係一門藝術。將啲你可以自己做，但唔係非做不可嘅事交俾佢。例如：「老公，個樽蓋好實呀，你可唔可以幫我開？」</li>
+                            <li><strong>畀機會佢幫你：</strong>唔好樣樣嘢都自己做，例如：「老公，幫我拎下袋。」</li>
+                            <li><strong>即時嘅感謝同崇拜：</strong>當佢幫咗你，一定要即刻俾反應！用充滿欣賞嘅眼神望住佢，講：「嘩！搞掂喇！冇你真係唔得！」</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>提升「存在感」</summary>
+                    <div class="details-content">
+                        <ul>
+                            <li><strong>設立「無手機時間」：</strong>規定每日食飯嘅時間，或者臨瞓前嘅半個鐘，係屬於你哋兩個人嘅「無手機時間」。專心聽對方講嘢，眼神交流。</li>
+                            <li><strong>將佢放喺第一位：</strong>無論幾忙，都要將佢擺喺第一位。用行動證明，佢係你嘅No. 1 Priority。例如：「我今日特登早啲返嚟，就係想陪你。」</li>
+                            <li><strong>專心聆聽：</strong>當佢講嘢嘅時候，放低手機，停止手上嘅工作，望住佢，真正去聽。</li>
+                        </ul>
+                    </div>
+                </details>
+            </section>
+            
+            <!-- Part 6: 結語 -->
+            <section class="course-section">
+                <h2>Part 6：結語 - 你的關係，由你掌握</h2>
+                <p>最後，我想再強調一次，呢六大核心需求，就好似你哋關係花園入面嘅陽光、空氣、水同土壤。當你用心去灌溉，你哋嘅感情之花，自然會越開越燦爛。</p>
+                <p>學識呢啲技巧，你會發現，你得到嘅，唔單止係一段更穩固嘅親密關係。你同仔女、同屋企人、甚至同同事朋友嘅關係，都會因此變得更加融洽。</p>
+                <p><strong>你唔再係一個被動嘅等待者，等待對方改變、等待運氣降臨。由今日開始，你係一個主動嘅「關係經營者」，你手上有地圖，有工具，你嘅關係，由你掌握。</strong></p>
+                <p>希望今日嘅分享可以真正幫到大家。如果你有任何問題，記得留言俾我，我會盡快解答大家！</p>
+            </section>
+        </main>
+
+        <footer>
+            <p>多謝你哋嘅收聽，我哋下次再見！</p>
+        </footer>
+    </div>
+
+</body>
+</html>

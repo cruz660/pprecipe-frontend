@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>山楂銀耳雪梨圓子湯 食譜</title>
+    <style>
+        /* 引入 Google Fonts 以美化字體 */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        /* 定義顏色變數，從 Logo 中提取，方便管理和修改 */
+        :root {
+            --primary-color: #E8845C; /* 標題和重點文字的粉橘色 */
+            --secondary-color: #F9D6A3; /* Logo 中的黃色 */
+            --light-peach: #FADBC8; /* Logo 中的淺粉色 */
+            --bg-color: #FEFBF3; /* 頁面背景的米黃色 */
+            --text-color: #5C4033; /* 深棕色文字，提高可讀性 */
+            --container-bg: #ffffff; /* 食譜卡片的白色背景 */
+            --border-color: #f0e9d6; /* 邊框顏色 */
+            --tips-bg: #fffaf0; /* 提示框背景色 */
+        }
+
+        /* 全局樣式設定 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            line-height: 1.8; /* 增加行高，提升可讀性 */
+            -webkit-font-smoothing: antialiased; /* 優化字體渲染 */
+        }
+
+        /* 食譜主容器，模擬一張卡片或紙張 */
+        .recipe-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(92, 64, 51, 0.08);
+            overflow: hidden; /* 確保圓角效果生效 */
+        }
+
+        /* 頁首區域，包含 Logo 和主標題 */
+        .header {
+            padding: 30px 40px;
+            text-align: center;
+            border-bottom: 2px solid var(--light-peach);
+        }
+
+        .logo {
+            max-width: 250px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        /* 主標題 H1 樣式 */
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        /* 內容區域 */
+        .content {
+            padding: 30px 40px;
+        }
+
+        /* 副標題 H2 樣式 */
+        h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-peach);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            margin-top: 50px; /* 為每個大標題增加上邊距，區分段落 */
+        }
+        
+        .content h2:first-of-type {
+            margin-top: 0; /* 第一個標題不需要上邊距 */
+        }
+
+        /* 食材列表樣式 */
+        .ingredients-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ingredients-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 1.1em;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .ingredients-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .ingredients-list li:hover {
+            background-color: #FFFDF9; /* 滑鼠懸停時的背景色 */
+        }
+
+        .ingredient-name {
+            font-weight: 700;
+        }
+        
+        .ingredient-name span {
+            font-weight: 400;
+            font-size: 0.9em;
+            color: #888;
+            margin-left: 8px;
+        }
+
+        .ingredient-qty {
+            font-weight: 400;
+            color: var(--text-color);
+        }
+
+        /* 製作程序列表樣式 */
+        .instructions-list {
+            list-style: none;
+            padding-left: 0;
+            counter-reset: instructions-counter; /* 初始化計數器 */
+        }
+
+        .instructions-list li {
+            counter-increment: instructions-counter; /* 每個 li 項目讓計數器 +1 */
+            margin-bottom: 25px;
+            padding-left: 55px;
+            position: relative;
+            font-size: 1.1em;
+        }
+
+        .instructions-list li::before {
+            content: counter(instructions-counter); /* 顯示計數器數字 */
+            position: absolute;
+            left: 0;
+            top: -2px;
+            width: 38px;
+            height: 38px;
+            background-color: var(--light-peach);
+            color: var(--primary-color);
+            border-radius: 50%;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1.2em;
+            text-align: center;
+            line-height: 38px;
+        }
+        
+        .instructions-list li strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* 深度解析 & 食材功效列表樣式 */
+        .analysis-list {
+            margin-top: 20px;
+        }
+
+        .analysis-list dt {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 500;
+            font-size: 1.3em;
+            color: var(--primary-color);
+            margin-top: 20px;
+        }
+
+        .analysis-list dd {
+            margin-left: 0;
+            padding-left: 20px;
+            border-left: 3px solid var(--light-peach);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+        
+        .analysis-list dd ul {
+            padding-left: 25px;
+            list-style-type: '🐾';
+        }
+        
+        .analysis-list dd ul li {
+            padding-left: 10px;
+        }
+
+        .summary-paragraph {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fefcf7;
+            border-left: 4px solid var(--secondary-color);
+            font-size: 1.1em;
+            line-height: 1.9;
+        }
+
+        /* 溫馨提示框樣式 */
+        .tips-box {
+            margin-top: 40px;
+            padding: 25px 30px;
+            background-color: var(--tips-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 8px;
+        }
+        
+        .tips-box h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4em;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .tips-box li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+        
+        .tips-box li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .tips-box li::before {
+            content: '💡'; /* 使用燈泡 emoji 作為提示符號 */
+            position: absolute;
+            left: 0;
+            top: -2px;
+            font-size: 1.2em;
+        }
+        
+        /* 頁脚樣式 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        /* 響應式設計：針對小於 768px 寬度的螢幕進行調整 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                line-height: 1.7;
+            }
+            .recipe-container {
+                margin: 10px auto;
+            }
+            .header, .content {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+                margin-top: 40px;
+            }
+            .ingredients-list li, .instructions-list li, .analysis-list dd, .summary-paragraph, .tips-box li {
+                font-size: 1em;
+            }
+            .instructions-list li {
+                padding-left: 50px;
+            }
+            .instructions-list li::before {
+                width: 35px;
+                height: 35px;
+                line-height: 35px;
+                font-size: 1.1em;
+            }
+            .tips-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="recipe-container">
+        <div class="header">
+            <img src="https://pprecipe.com/pppf_logo.jpg" alt="PP Pawfact Logo" class="logo">
+            <h1>山楂銀耳雪梨圓子湯</h1>
+        </div>
+        
+        <div class="content">
+            <h2>食材配方 (Ingredients)</h2>
+            <ul class="ingredients-list">
+                <li>
+                    <div class="ingredient-name">豬瘦肉 / 雞肉 <span>(Lean Pork / Chicken)</span></div>
+                    <div class="ingredient-qty">150g</div>
+                </li>
+                <li>
+                    <div class="ingredient-name">雞蛋 <span>(Egg)</span></div>
+                    <div class="ingredient-qty">1顆</div>
+                </li>
+                <li>
+                    <div class="ingredient-name">銀耳 (乾) <span>(Snow Fungus, dried)</span></div>
+                    <div class="ingredient-qty">10g</div>
+                </li>
+                <li>
+                    <div class="ingredient-name">雪梨 <span>(Snow Pear)</span></div>
+                    <div class="ingredient-qty">80g</div>
+                </li>
+                <li>
+                    <div class="ingredient-name">山楂 (乾) <span>(Hawthorn, dried)</span></div>
+                    <div class="ingredient-qty">5g</div>
+                </li>
+                <li>
+                    <div class="ingredient-name">枸杞 <span>(Goji Berries)</span></div>
+                    <div class="ingredient-qty">3g</div>
+                </li>
+                <li>
+                    <div class="ingredient-name">大棗 <span>(Jujubes / Red Dates)</span></div>
+                    <div class="ingredient-qty">2顆</div>
+                </li>
+            </ul>
+
+            <h2>製作程序 (Instructions)</h2>
+            <ol class="instructions-list">
+                <li><strong>準備工作：</strong>將乾銀耳用溫水泡發約30分鐘至完全舒展，去除根部黃色硬塊後撕成小朵。雪梨去皮去核，切成小丁。山楂、枸杞、大棗洗淨備用。</li>
+                <li><strong>製作肉圓：</strong>將豬瘦肉或雞肉剁成細膩的肉泥。加入一顆雞蛋，順時針攪拌至肉泥上勁、有黏性。</li>
+                <li><strong>煮製湯底：</strong>在鍋中加入足量清水，放入銀耳、雪梨丁、山楂及大棗，大火煮沸後轉小火慢燉20分鐘，讓食材味道充分釋出。</li>
+                <li><strong>下入肉圓：</strong>保持湯水微沸狀態，用湯匙或手將肉泥擠成小圓子，逐一放入鍋中。待所有肉圓浮起，即表示已熟透。</li>
+                <li><strong>完成步驟：</strong>加入枸杞，繼續煮約2分鐘即可關火。此食譜專為寵物設計，無需額外加鹽或調味料。</li>
+                <li><strong>溫馨提示：</strong>放涼至適口溫度後，即可給毛孩享用。可將銀耳和肉圓剪得更碎，方便小型犬或貓咪食用。</li>
+            </ol>
+            
+            <h2>食譜深度解析 (In-depth Analysis)</h2>
+            <p>這份升級版的狗狗藥膳食譜，在滋潤的基礎上增添了助消化的元素，巧妙地將「潤肺」與「健胃」兩大秋季保健需求結合在一起。</p>
+            <dl class="analysis-list">
+                <dt>山楂 (Hawthorn)</dt>
+                <dd>
+                    <ul>
+                        <li><strong>開胃健脾：</strong> 山楂獨特的酸甜味能刺激味蕾，促進唾液和胃液分泌，有效提振狗狗的食慾。</li>
+                        <li><strong>消食化積：</strong> 它最為人稱道的功能就是幫助消化，尤其是對於肉類等高蛋白食物的「消肉積」效果顯著。這正好與湯中的豬肉圓子完美搭配，讓營養易於吸收，不易造成腸胃積滯。</li>
+                    </ul>
+                </dd>
+                
+                <dt>雪梨 (Snow Pear)</dt>
+                <dd>作為潤燥的核心食材，雪梨性涼味甘，能生津潤肺、清熱化痰，是應對秋季乾咳和喉嚨不適的天然選擇。</dd>
+
+                <dt>銀耳 (Snow Fungus)</dt>
+                <dd>富含植物性膠質與多醣，能溫和地滋潤呼吸道黏膜，形成保護層，其滑順的口感也深受狗狗喜愛。</dd>
+
+                <dt>豬瘦肉與雞蛋 (Lean Pork & Egg)</dt>
+                <dd>提供優質的動物性蛋白質和能量，製成肉丸後方便狗狗咀嚼和消化，是維持體力的基礎。</dd>
+
+                <dt>枸杞與大棗 (Goji Berries & Jujubes)</dt>
+                <dd>這對經典的藥膳組合，不僅能提供額外的維生素和抗氧化物，還能調和整道湯品的風味，讓山楂的酸、雪梨的甜和肉丸的鮮美更加融洽。</dd>
+            </dl>
+            
+            <p class="summary-paragraph">
+                <strong>總結來說</strong>，這道「山楂銀耳雪梨圓子湯」不僅能幫助您的愛犬對抗秋燥，還能促進牠的食慾與消化功能，讓牠以更佳的狀態迎接美好的秋日時光。
+            </p>
+
+            <div class="tips-box">
+                <h3>溫馨提示 (Warm Tips)</h3>
+                <ul>
+                    <li>山楂帶有酸性，請務必適量使用，食譜中的份量已是安全參考值。</li>
+                    <li>初次餵食任何新食譜時，請從少量開始，並觀察狗狗的反應。如有過敏或腸胃不適，應立即停止。</li>
+                    <li>若您的愛犬有特殊的健康狀況（如腎臟問題、糖尿病等），請在準備食療前諮詢您的獸醫師。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Recipe by PP Pawfact - Love in Every Bite
+    </div>
+
+</body>
+</html>

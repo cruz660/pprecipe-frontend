@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PP Pawfact - 鴨胸潤肺養生餐</title>
+    <style>
+        /* --- Google Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+        /* --- CSS Variables for Colors --- */
+        :root {
+            --bg-color: #FFF7E8;
+            --text-color: #5C4033;
+            --primary-color: #F4A28B;
+            --accent-color: #FDBB49;
+            --light-gray: #D3D6DD;
+            --white: #FFFFFF;
+            --placeholder-bg: #ECEAE4;
+            --font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        /* --- General Styling --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Header & Logo --- */
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .logo {
+            max-width: 250px;
+            height: auto;
+        }
+
+        /* --- Product Hero Section --- */
+        .product-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .product-hero h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .product-hero .tagline {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        /* --- Product Image Styling --- */
+        .product-image {
+            max-width: 450px;
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin: 30px auto;
+            display: block;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-hero p {
+            max-width: 600px;
+            margin: 20px auto 0;
+            font-size: 1.1rem;
+        }
+        
+        /* --- Section Styling --- */
+        .section {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        /* --- Ingredients Section --- */
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .ingredient-card {
+            background-color: var(--bg-color);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .ingredient-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .ingredient-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .ingredient-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        /* --- Guaranteed Analysis Section --- */
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .analysis-table th, .analysis-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .analysis-table th {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .analysis-table tr:nth-child(odd) {
+            background-color: #fdfaf3;
+        }
+
+        .analysis-table td:last-child {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .calories {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        /* --- Call to Action --- */
+        .cta-section {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: var(--white);
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(253, 187, 73, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(244, 162, 139, 0.5);
+        }
+        
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .product-hero h1 {
+                font-size: 2rem;
+            }
+            .section {
+                padding: 20px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <img src="https://pprecipe.com/pppf_logo.jpg" alt="PP Pawfact Logo" class="logo">
+        </header>
+
+        <main>
+            <section class="product-hero">
+                <h1>鴨胸潤肺養生餐</h1>
+                <div class="tagline">Duck Breast Nourishing Meal</div>
+
+                <!-- 產品圖片 -->
+                <img src="https://pprecipe.com/DuckBreastNourishingMeal.png" alt="鴨胸潤肺養生餐與可愛的狗狗" class="product-image">
+
+                <p>專為毛孩設計的滋潤養生鮮食餐。我們選用人類食用級別的優質鴨胸肉，搭配東方養生智慧中的潤肺食材，不僅美味，更能從內而外呵護愛犬的呼吸系統與整體健康。</p>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">嚴選食材與功效</h2>
+                <div class="ingredients-grid">
+                    <div class="ingredient-card">
+                        <h3>優質鴨胸</h3>
+                        <p>低敏優質蛋白質來源，性味甘涼，有助滋陰補虛，強健體魄，同時不易引起燥熱。</p>
+                    </div>
+                    <div class="ingredient-card">
+                        <h3>有機小米</h3>
+                        <p>溫和無麩質穀物，富含B群維生素與膳食纖維，健脾和胃，好消化好吸收。</p>
+                    </div>
+                    <div class="ingredient-card">
+                        <h3>清甜鴨梨</h3>
+                        <p>傳統東方養生食材，能生津潤燥、清熱化痰，特別適合滋潤狗狗的呼吸道健康。</p>
+                    </div>
+                    <div class="ingredient-card">
+                        <h3>新鮮紅蘿蔔</h3>
+                        <p>提供天然維生素A與β-胡蘿蔔素，是維持良好視力、免疫力與皮膚健康的重要營養素。</p>
+                    </div>
+                    <div class="ingredient-card">
+                        <h3>有機苗菜</h3>
+                        <p>富含天然酵素與多種微量元素，有助於促進腸道蠕動與消化，為毛孩提供滿滿活力。</p>
+                    </div>
+                    <div class="ingredient-card">
+                        <h3>完整營養配方</h3>
+                        <p>添加符合AAFCO標準的犬用綜合營養粉，補足鈣、鋅、維生素E&D等關鍵營養，確保每一餐都是營養均衡的主食。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">保證成分分析</h2>
+                <p style="text-align:center; margin-bottom: 20px;">本分析為濕重基準 (As-Fed Basis)。每份標準包裝為 160 公克。</p>
+                <table class="analysis-table">
+                    <tbody>
+                        <tr>
+                            <th>粗蛋白 (Crude Protein)</th>
+                            <td>最低 12.0%</td>
+                        </tr>
+                        <tr>
+                            <th>粗脂肪 (Crude Fat)</th>
+                            <td>最低 5.0%</td>
+                        </tr>
+                        <tr>
+                            <th>粗纖維 (Crude Fiber)</th>
+                            <td>最高 2.0%</td>
+                        </tr>
+                        <tr>
+                            <th>水分 (Moisture)</th>
+                            <td>最高 72.0%</td>
+                        </tr>
+                        <tr>
+                            <th>灰分 (Ash)</th>
+                            <td>最高 2.5%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="calories">
+                    <strong>熱量 (Calorie Content):</strong> 約 150 kcal / 100g (每份 160g 約含 240 kcal)
+                </p>
+            </section>
+
+            <section class="cta-section">
+                <a href="#" class="cta-button">立即為愛寵選購</a>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 PP Pawfact. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haru 專屬鮮食營養計劃</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: #f5f0eb;
+            color: #2d2d2d;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .download-bar {
+                display: none !important;
+            }
+            .container {
+                padding: 20px 40px;
+                max-width: 100%;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            .recipe-card {
+                page-break-inside: avoid;
+            }
+            .cover-section {
+                padding: 40px 20px;
+            }
+        }
+
+        /* Download Bar */
+        .download-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #4e342e, #3e2723);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+        }
+
+        .download-bar p {
+            color: #ffe0b2;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #ff8a65, #ffb74d);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans TC', sans-serif;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 3px 10px rgba(255,138,101,0.4);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,138,101,0.5);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 50px 40px;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Cover Section */
+        .cover-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #fef9f0 0%, #fff5e6 50%, #fef0d8 100%);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 2px solid #f5e6d0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-section::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,183,77,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cover-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,138,101,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .pet-photo-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #ffb74d;
+            box-shadow: 0 4px 20px rgba(255, 167, 38, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .pet-photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff8a65, #ffb74d);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #3e2723;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: #6d4c41;
+            font-weight: 400;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .calorie-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #ff8a65, #ffb74d);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+            border: 1px solid #f0e8e0;
+        }
+
+        .profile-card h2 {
+            font-size: 18px;
+            color: #4e342e;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffe0b2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .profile-item {
+            background: #fafafa;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border-left: 3px solid #ffb74d;
+        }
+
+        .profile-item .label {
+            font-size: 11px;
+            color: #888;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-item .value {
+            font-size: 15px;
+            color: #333;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .profile-item.highlight {
+            background: linear-gradient(135deg, #fff8e1, #fff3e0);
+            border-left-color: #ff8a65;
+        }
+
+        .profile-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Section Headers */
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .section-header .icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #ffb74d, #ff8a65);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #3e2723;
+        }
+
+        /* Strategy Table */
+        .strategy-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .strategy-table thead th {
+            background: linear-gradient(135deg, #5d4037, #4e342e);
+            color: white;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+            letter-spacing: 0.5px;
+        }
+
+        .strategy-table tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0e8e0;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        .strategy-table tbody tr:nth-child(even) {
+            background: #fdf8f4;
+        }
+
+        .strategy-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .strategy-table .nutrient-name {
+            font-weight: 700;
+            color: #e65100;
+        }
+
+        /* Recipe Cards */
+        .recipe-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 20px rgba(0,0,0,0.07);
+            border: 1px solid #f0e8e0;
+        }
+
+        .recipe-header {
+            padding: 20px 25px;
+            color: white;
+            position: relative;
+        }
+
+        .recipe-header.salmon {
+            background: linear-gradient(135deg, #0097a7, #00838f);
+        }
+
+        .recipe-header.lamb {
+            background: linear-gradient(135deg, #d84315, #bf360c);
+        }
+
+        .recipe-header h3 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .recipe-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .recipe-body {
+            padding: 20px 25px;
+        }
+
+        .recipe-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .recipe-table thead th {
+            background: #f8f4f0;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            color: #6d4c41;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #efe5dc;
+        }
+
+        .recipe-table tbody td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f5f0ec;
+            vertical-align: top;
+        }
+
+        .recipe-table tbody tr:hover {
+            background: #fdf9f6;
+        }
+
+        .recipe-table .ingredient {
+            font-weight: 600;
+            color: #3e2723;
+        }
+
+        .recipe-table .amount {
+            color: #e65100;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .recipe-table .nutrition-note {
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd, #e1f5fe);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 20px 0;
+            border-left: 4px solid #0288d1;
+        }
+
+        .info-box.warning {
+            background: linear-gradient(135deg, #fff3e0, #fff8e1);
+            border-left-color: #f57c00;
+        }
+
+        .info-box.success {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            border-left-color: #388e3c;
+        }
+
+        .info-box h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1565c0;
+        }
+
+        .info-box.warning h4 {
+            color: #e65100;
+        }
+
+        .info-box.success h4 {
+            color: #2e7d32;
+        }
+
+        .info-box p {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        /* Safety Section */
+        .safety-section {
+            margin-top: 35px;
+        }
+
+        .danger-zone {
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+
+        .danger-zone h4 {
+            color: #c62828;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .danger-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ffebee;
+            font-size: 13px;
+        }
+
+        .danger-item:last-child {
+            border-bottom: none;
+        }
+
+        .danger-item strong {
+            color: #c62828;
+        }
+
+        .safe-zone {
+            background: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            border-radius: 12px;
+            padding: 20px 24px;
+        }
+
+        .safe-zone h4 {
+            color: #33691e;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .safe-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #dcedc8;
+            font-size: 13px;
+        }
+
+        .safe-item:last-child {
+            border-bottom: none;
+        }
+
+        .safe-item strong {
+            color: #33691e;
+        }
+
+        /* Rotation Guide */
+        .rotation-guide {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-top: 20px;
+        }
+
+        .rotation-guide h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4e342e;
+            margin-bottom: 10px;
+        }
+
+        .rotation-guide ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rotation-guide ul li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .rotation-guide ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #ff8a65;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 1.4;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 2px solid #f0e8e0;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .footer .brand {
+            font-weight: 700;
+            color: #6d4c41;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* Copyright Section */
+        .copyright-section {
+            text-align: center;
+            padding: 20px 20px 30px;
+            margin-top: 10px;
+            border-top: 1px solid #e0d6ce;
+        }
+
+        .copyright-logo {
+            font-size: 18px;
+            font-weight: 900;
+            color: #4e342e;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .copyright-logo span {
+            background: linear-gradient(135deg, #ff8a65, #ffb74d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .copyright-text {
+            font-size: 11px;
+            color: #999;
+            line-height: 1.8;
+        }
+
+        .copyright-text .bold {
+            font-weight: 700;
+            color: #777;
+        }
+
+        .copyright-badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 16px;
+            background: #f5f0eb;
+            border: 1px solid #e0d6ce;
+            border-radius: 20px;
+            font-size: 10px;
+            color: #888;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 70px 20px 20px;
+            }
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .cover-title {
+                font-size: 24px;
+            }
+            .recipe-table {
+                font-size: 12px;
+            }
+            .pet-photo-container {
+                width: 120px;
+                height: 120px;
+            }
+            .download-bar {
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Download Bar -->
+    <div class="download-bar">
+        <p>📄 點擊下方按鈕將此營養計劃儲存為 PDF 檔案</p>
+        <button class="download-btn" onclick="window.print()">⬇️ 下載 PDF</button>
+    </div>
+
+    <div class="container">
+        <!-- Cover -->
+        <div class="cover-section">
+            <div class="pet-photo-container">
+                <img src="https://i.imgur.com/afhuFLO.jpg" alt="Haru 嘅靚相" />
+            </div>
+            <div class="brand-badge">✨ 專屬鮮食營養計劃 ✨</div>
+            <h1 class="cover-title">Haru 嘅每日營養餐單</h1>
+            <p class="cover-subtitle">為咗令 Haru 食得飽又唔會長肥肉，我哋精準計算咗每日所需嘅卡路里！</p>
+            <div class="calorie-badge">🎯 每日目標熱量：~240 kcal</div>
+        </div>
+
+        <!-- Profile -->
+        <div class="profile-card">
+            <h2>📋 Haru 嘅基本資料</h2>
+            <div class="profile-grid">
+                <div class="profile-item">
+                    <div class="label">寶貝名</div>
+                    <div class="value">Haru 🐶</div>
+                </div>
+                <div class="profile-item">
+                    <div class="label">當前體重</div>
+                    <div class="value">5.5 kg</div>
+                </div>
+                <div class="profile-item">
+                    <div class="label">年齡</div>
+                    <div class="value">2 歲</div>
+                </div>
+                <div class="profile-item">
+                    <div class="label">性別 / 絕育狀態</div>
+                    <div class="value">男仔 / 已絕育 🚹</div>
+                </div>
+                <div class="profile-item full-width">
+                    <div class="label">敏感 / 身體狀況</div>
+                    <div class="value">冇食物敏感。身體好健康，唯獨近期毛色有少少褪淡。</div>
+                </div>
+                <div class="profile-item highlight full-width">
+                    <div class="label">每日目標熱量</div>
+                    <div class="value">~240 kcal（已取中位數，完美符合每日活力所需）</div>
+                </div>
+                <div class="profile-item full-width">
+                    <div class="label">營養符合標準</div>
+                    <div class="value">美國 AAFCO 2016 🐶 成犬維持期（Adult Maintenance）營養標準</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coat Strategy -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon">🎯</div>
+                <h2>針對毛色褪淡嘅營養補給策略</h2>
+            </div>
+
+            <div class="info-box warning">
+                <h4>💭 點解毛色會變淡？</h4>
+                <p>除咗基因同年齡因素之外，毛囊同黑色素細胞需要特定營養素先可以正常運作！我哋今次嘅營養策略就係針對呢啲需要嚟設計。</p>
+            </div>
+
+            <table class="strategy-table">
+                <thead>
+                    <tr>
+                        <th>💡 營養策略</th>
+                        <th>🥩 嚴選食材來源</th>
+                        <th>🌟 對 Haru 嘅神奇功效</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="nutrient-name">高 EPA + DHA</td>
+                        <td>三文魚 / 水浸沙甸魚</td>
+                        <td>滋潤皮膚，增加毛髮光澤 → 視覺上更飽和、更有質感！</td>
+                    </tr>
+                    <tr>
+                        <td class="nutrient-name">充足嘅「銅」</td>
+                        <td>雞肝 / 鴨肝 / 羊肝</td>
+                        <td>維持「酪胺酸酶」活性嘅關鍵酵素，幫助黑色素順利合成。</td>
+                    </tr>
+                    <tr>
+                        <td class="nutrient-name">補充「酪胺酸」</td>
+                        <td>熟雞蛋 + 優質肉類蛋白</td>
+                        <td>形成毛髮黑色素嘅最直接天然原料！</td>
+                    </tr>
+                    <tr>
+                        <td class="nutrient-name">充足嘅「鋅」</td>
+                        <td>生蠔 + 羊肉</td>
+                        <td>確保黑色素細胞可以正常運作同增殖。</td>
+                    </tr>
+                    <tr>
+                        <td class="nutrient-name">優質「生物素」</td>
+                        <td>熟蛋黃 + 內臟類</td>
+                        <td>維持毛囊同皮膚健康嘅維他命 B7，令新毛長得強韌。</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <h4>📢 畀爸媽嘅貼心預期管理</h4>
+                <p>狗狗嘅毛髮生長係有週期嘅，大約喺 <strong>6-8 星期</strong>之後，新長出嚟嘅毛毛就會呈現出更好嘅光澤同質感㗎！<br><br>不過爸媽要留意，如果係基因性嘅褪色（例如貴賓或者某啲犬種常見嘅褪色基因），鮮食能夠做到嘅係「全面優化髮質同健康」，色素密度會有輕微改善，但冇辦法完全逆轉基因造成嘅變淡㗎！</p>
+            </div>
+        </div>
+
+        <!-- Recipes Intro -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon">🍱</div>
+                <h2>Haru 嘅精選鮮食雙配方餐單</h2>
+            </div>
+
+            <div class="info-box success">
+                <h4>📝 小提示</h4>
+                <p>以下份量均為「每日總份量」（即一日所需熱量 ~240 kcal）。爸媽可以按照習慣，將每日份量平分做兩餐餵飼！</p>
+            </div>
+        </div>
+
+        <!-- Recipe 1: Salmon -->
+        <div class="recipe-card no-break">
+            <div class="recipe-header salmon">
+                <h3>🐟 配方一：亮毛煥膚三文魚配方</h3>
+                <p>主打深海魚油，全面滋潤皮膚 ｜ 適合一星期餵飼 3-4 日 ｜ 一日份量</p>
+            </div>
+            <div class="recipe-body">
+                <table class="recipe-table">
+                    <thead>
+                        <tr>
+                            <th>食材</th>
+                            <th>份量</th>
+                            <th>主要營養貢獻</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ingredient">三文魚（去骨蒸熟）</td>
+                            <td class="amount">80g</td>
+                            <td class="nutrition-note">豐富 EPA+DHA、優質蛋白質、維他命 D</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">雞肝 或 鴨肝（灼熟切碎）</td>
+                            <td class="amount">10g</td>
+                            <td class="nutrition-note">豐富微量元素銅、維他命 A、B群</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">生蠔（煮熟切碎）</td>
+                            <td class="amount">6g</td>
+                            <td class="nutrition-note">頂級天然鋅來源，活化黑色素</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">熟雞蛋（連蛋黃切碎）</td>
+                            <td class="amount">半隻 (~25g)</td>
+                            <td class="nutrition-note">酪胺酸、生物素（維他命 B7）、鐵質</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">番薯（蒸熟壓蓉）</td>
+                            <td class="amount">25g</td>
+                            <td class="nutrition-note">優質碳水化合物、膳食纖維、維他命 A</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">菠菜（灼熟切碎）</td>
+                            <td class="amount">15g</td>
+                            <td class="nutrition-note">鐵質、葉酸</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">椰菜花 / 白花椰菜（灼熟切碎）</td>
+                            <td class="amount">15g</td>
+                            <td class="nutrition-note">【Haru 專屬替代食材】 維他命 C、纖維、抗氧化物</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">紅蘿蔔（蒸熟切粒）</td>
+                            <td class="amount">10g</td>
+                            <td class="nutrition-note">β-胡蘿蔔素</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">蛋殼粉</td>
+                            <td class="amount">1.5g</td>
+                            <td class="nutrition-note">補充鈣質，平衡鈣磷比</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">紫菜（撕碎）</td>
+                            <td class="amount">2g</td>
+                            <td class="nutrition-note">天然碘來源</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">南瓜籽（磨碎）</td>
+                            <td class="amount">2g</td>
+                            <td class="nutrition-note">豐富嘅鎂</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">葵花籽（磨碎）</td>
+                            <td class="amount">2g</td>
+                            <td class="nutrition-note">維他命 E、亞麻油酸</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recipe 2: Lamb -->
+        <div class="recipe-card no-break">
+            <div class="recipe-header lamb">
+                <h3>🐑 配方二：強韌修護羊肉配方</h3>
+                <p>溫補羊肉搭配高鈣沙甸魚，強健毛囊同肌肉 ｜ 同三文魚輪流替換 ｜ 一日份量</p>
+            </div>
+            <div class="recipe-body">
+                <table class="recipe-table">
+                    <thead>
+                        <tr>
+                            <th>食材</th>
+                            <th>份量</th>
+                            <th>主要營養貢獻</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ingredient">羊肉（瘦肉，煮熟切粒）</td>
+                            <td class="amount">85g</td>
+                            <td class="nutrition-note">豐富天然鋅、優質蛋白質、鐵質</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">羊肝 或 雞肝（灼熟切碎）</td>
+                            <td class="amount">10g</td>
+                            <td class="nutrition-note">微量元素銅、維他命 A、B群</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">水浸沙甸魚（無鹽，瀝乾）</td>
+                            <td class="amount">30g</td>
+                            <td class="nutrition-note">補充 EPA+DHA、Omega-3、天然鈣質</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">熟雞蛋（連蛋黃切碎）</td>
+                            <td class="amount">半隻 (~25g)</td>
+                            <td class="nutrition-note">酪胺酸、生物素、鐵質</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">南瓜（蒸熟壓蓉）</td>
+                            <td class="amount">20g</td>
+                            <td class="nutrition-note">護腸胃優質碳水、膳食纖維</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">菠菜（灼熟切碎）</td>
+                            <td class="amount">15g</td>
+                            <td class="nutrition-note">鐵質、葉酸</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">椰菜花 / 白花椰菜（灼熟切碎）</td>
+                            <td class="amount">15g</td>
+                            <td class="nutrition-note">【Haru 專屬替代食材】 維他命 C、腸道纖維</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">紅蘿蔔（蒸熟切粒）</td>
+                            <td class="amount">10g</td>
+                            <td class="nutrition-note">β-胡蘿蔔素</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">蛋殼粉</td>
+                            <td class="amount">1.5g</td>
+                            <td class="nutrition-note">補鈣，維持骨骼強壯</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">壽司紫菜</td>
+                            <td class="amount">2g</td>
+                            <td class="nutrition-note">天然碘來源</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">南瓜籽（磨碎）</td>
+                            <td class="amount">2g</td>
+                            <td class="nutrition-note">豐富嘅鎂</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">葵花籽（磨碎）</td>
+                            <td class="amount">3g</td>
+                            <td class="nutrition-note">維他命 E、亞麻油酸</td>
+                        </tr>
+                        <tr>
+                            <td class="ingredient">亞麻籽油</td>
+                            <td class="amount">2.5g (½ 茶匙)</td>
+                            <td class="nutrition-note">ALA（植物性 Omega-3 脂肪酸）</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rotation Guide -->
+        <div class="section">
+            <div class="section-header">
+                <div class="icon">🔄</div>
+                <h2>長期輪替同餵飼建議</h2>
+            </div>
+
+            <div class="rotation-guide">
+                <h4>📅 餐單輪替</h4>
+                <ul>
+                    <li>建議兩款食譜交替餵飼（例如：星期一至星期四食三文魚，星期五至星期日食羊肉）。</li>
+                    <li>長期嚟講，建議每 2-3 個月搵營養師為 Haru 進行微調或者換新肉類食譜，確保營養更加全面！</li>
+                </ul>
+            </div>
+
+            <div class="rotation-guide" style="margin-top: 15px;">
+                <h4>🔀 轉食過渡期</h4>
+                <ul>
+                    <li>如果 Haru 之前唔係全鮮食，請用 <strong>7-10 日</strong>嘅時間，循序漸進咁增加鮮食比例，減少舊食物，等 Haru 嘅腸胃慢慢適應新食材！</li>
+                </ul>
+            </div>
+
+            <div class="rotation-guide" style="margin-top: 15px;">
+                <h4>🍳 食材處理</h4>
+                <ul>
+                    <li>所有肉類、內臟、蔬菜、海鮮請務必徹底煮熟。</li>
+                    <li>種子類（南瓜籽、葵花籽）一定要磨成粉狀，Haru 先可以完美吸收入面嘅營養。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Safety Section -->
+        <div class="safety-section">
+            <div class="section-header">
+                <div class="icon">🛑</div>
+                <h2>飲食安全守則：Haru 專屬紅綠燈</h2>
+            </div>
+
+            <p style="margin-bottom: 20px; color: #666; font-size: 13px;">鮮食雖然好，但有啲食物係狗狗嘅隱形殺手！請爸爸媽媽一定要牢記以下清單：</p>
+
+            <div class="danger-zone">
+                <h4>❌ 絕對唔食得（紅燈危險區！）</h4>
+                <div class="danger-item">
+                    <strong>洋蔥、蒜頭、韭菜：</strong> 會破壞紅血球，引致嚴重貧血。
+                </div>
+                <div class="danger-item">
+                    <strong>提子、提子乾：</strong> 即使少量都會引致突發性腎衰竭。
+                </div>
+                <div class="danger-item">
+                    <strong>朱古力、可可：</strong> 含有可可鹼，會引致心臟中毒同抽搐。
+                </div>
+                <div class="danger-item">
+                    <strong>夏威夷果（澳洲堅果）：</strong> 會影響神經系統，引致雙腿無力、嘔吐。
+                </div>
+                <div class="danger-item">
+                    <strong>木糖醇（Xylitol，常含喺無糖香口膠、部分花生醬）：</strong> 會引致致命性低血糖同肝衰竭。
+                </div>
+                <div class="danger-item">
+                    <strong>生雞蛋蛋白：</strong> 生蛋白含有卵白素（Avidin），會阻礙體內生物素（Biotin）嘅吸收，反而會令毛色變差！（餐單中我哋已規定使用熟雞蛋）
+                </div>
+            </div>
+
+            <div class="safe-zone">
+                <h4>✅ 可以間中當零食（綠燈獎勵區！⭐ 需控制喺每日總熱量 10% 以內）</h4>
+                <p style="font-size: 12px; color: #558b2f; margin-bottom: 12px;">想同 Haru 互動嘅時候，以下天然食材係超棒嘅健康小零食：</p>
+                <div class="safe-item">
+                    <strong>藍莓 🫐：</strong> 每日 3-5 粒。富含花青素同抗氧化物，可以保護黑色素細胞。
+                </div>
+                <div class="safe-item">
+                    <strong>熟蛋黃 🍳：</strong> 每隔一日畀半個。滿滿嘅生物素同卵磷脂，係天然嘅爆毛神器！
+                </div>
+                <div class="safe-item">
+                    <strong>三文魚皮（烤脆）🐟：</strong> 一小片。含有豐富嘅 Omega-3 脂肪酸，兼顧適口性同亮毛。
+                </div>
+                <div class="safe-item">
+                    <strong>紅蘿蔔條 🥕：</strong> 1 小條。爽脆爽脆，既可以當潔牙玩具，又可以補充維他命 A。
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="brand">🐾 Haru 專屬鮮食營養計劃</div>
+            <p>希望 Haru 會鍾意呢份為佢度身訂造嘅美味大餐！</p>
+            <p>如果有任何烹飪或者餵飼上嘅問題，隨時歡迎聯絡專屬營養師 💖</p>
+            <p style="margin-top: 10px;">祝 Haru 食得香香、毛髮亮晶晶！✨🐶</p>
+        </div>
+
+        <!-- Copyright -->
+        <div class="copyright-section">
+            <div class="copyright-logo">🐾 <span>PP Pawfact</span></div>
+            <div class="copyright-text">
+                <p class="bold">© PP Pawfact 版權所有</p>
+                <p>本營養計劃之所有內容（包括但不限於文字、配方、數據及設計）</p>
+                <p>均受版權保護，未經授權，<strong>請勿轉載及分享</strong>。</p>
+            </div>
+            <div class="copyright-badge">🔒 CONFIDENTIAL — FOR PERSONAL USE ONLY</div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.download-btn').addEventListener('click', function() {
+            try {
+                window.print();
+            } catch(e) {
+                var modal = document.createElement('div');
+                modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;';
+                modal.innerHTML = '<div style="background:white;padding:30px;border-radius:16px;max-width:400px;text-align:center;font-family:Noto Sans TC,sans-serif;"><h3 style="margin-bottom:15px;color:#3e2723;">📄 下載 PDF 方法</h3><p style="color:#666;font-size:14px;line-height:1.7;">請右鍵點擊此頁面，選擇「列印」或按 <strong>Ctrl+P</strong>（Mac: Cmd+P），然後喺目的地選擇「另存為 PDF」就可以下載啦！</p><button onclick="this.parentElement.parentElement.remove()" style="margin-top:20px;background:linear-gradient(135deg,#ff8a65,#ffb74d);color:white;border:none;padding:10px 24px;border-radius:20px;font-size:14px;font-weight:700;cursor:pointer;">明白了 👍</button></div>';
+                document.body.appendChild(modal);
+            }
+        });
+    </script>
+</body>
+</html>
